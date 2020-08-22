@@ -11,12 +11,34 @@ class User extends Authenticatable
     use Notifiable;
 
     /**
+     * @var array
+     */
+    protected $dates = [
+        'created_at',
+        'updated_at',
+        'deleted_at'
+    ];
+
+    /**
+     * @var array
+     */
+    protected $profile = [
+        'root',
+        'adm',
+        'user'
+    ];
+
+    /**
      * The attributes that are mass assignable.
      *
      * @var array
      */
     protected $fillable = [
-        'name', 'email', 'password',
+        'name',
+        'lastname',
+        'email',
+        'password',
+        'profile'
     ];
 
     /**
@@ -25,7 +47,8 @@ class User extends Authenticatable
      * @var array
      */
     protected $hidden = [
-        'password', 'remember_token',
+        'password',
+        'remember_token',
     ];
 
     /**
@@ -36,4 +59,9 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    public function hasRole($role)
+    {//...$roles :: spread operator
+        return $this->is_admin == $role;
+    }
 }
