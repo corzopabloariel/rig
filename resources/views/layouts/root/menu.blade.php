@@ -2,6 +2,7 @@
     <link rel="stylesheet" href="{{ asset('css/menu.css') }}">
     <link rel="stylesheet" href="{{ asset('css/adm.css') }}">
     <link rel="stylesheet" href="{{ asset('css/nav.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/css.css') }}">
 @endpush
 <div class="position-relative h-100">
     <ul class="nav-pyrus">

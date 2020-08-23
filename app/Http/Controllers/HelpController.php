@@ -17,8 +17,9 @@ class HelpController extends Controller
         $helps = Help::orderBy("code")->paginate(PAGINATE);
 
         $data = [
-            "view" => "helps.index",
+            "view" => "element",
             "elements" => $helps,
+            "entity" => "help",
             "placeholder" => "Código"
         ];
         return view('home',compact('data'));
