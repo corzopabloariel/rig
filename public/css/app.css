@@ -1,5 +1,6 @@
 .body {
-    background-color: #fafafa;
+    background: #fafafa;
+    background: linear-gradient(to right, #f8f8f8 , #fdfdfd);
     color: #777777;
     font-family: 'Montserrat', sans-serif;
     font-size: 14px;
@@ -11,4 +12,11 @@
 
 .color {
     background-color: #212121;
+}
+
+.card__img {
+    max-width: 100%;
+    width: 250px;
+    display: block;
+    margin: auto;
 }

@@ -22,11 +22,11 @@ class User extends Authenticatable
     /**
      * @var array
      */
-    protected $profile = [
+    /*protected $profile = [
         'root',
         'adm',
         'user'
-    ];
+    ];*/
 
     /**
      * The attributes that are mass assignable.
@@ -62,6 +62,21 @@ class User extends Authenticatable
 
     public function hasRole($role)
     {//...$roles :: spread operator
-        return $this->is_admin == $role;
+        return $this->profile == $role;
+    }
+
+    public function redirect()
+    {
+        $elements = [
+            'root' => 'root',
+            'adm' => 'adm',
+            'user' => 'client'
+        ];
+        return $elements[$this->profile];
+    }
+
+    public function fullname()
+    {
+        return trim($this->name . " " . $this->lastname);
     }
 }

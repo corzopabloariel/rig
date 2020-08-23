@@ -4,9 +4,9 @@
 <div class="container-fluid body__container">
     <div class="row justify-content-center align-content-center body__container">
         <div class="col-12 col-sm-9 col-md-6 col-lg-5 col-xl-4">
-            <div class="card">
+            <div class="card shadow-sm">
                 <div class="card-header">
-                    <img src="{{ asset('images/rig-logo.png') }}" class="w-100" alt="" srcset="">
+                    <img src="{{ asset('images/rig-logo.png') }}" class="card__img" alt="RIG" srcset="">
                 </div>
                 <div class="card-body">
                     <div class="py-5">
