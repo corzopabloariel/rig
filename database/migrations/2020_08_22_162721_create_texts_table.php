@@ -15,9 +15,8 @@ class CreateTextsTable extends Migration
     {
         Schema::create('texts', function (Blueprint $table) {
             $table->id();
-            $table->string('code', 10)->unique();//Genera automática
+            $table->string('code', 30)->unique();//Genera automática
             $table->text('data')->nullable()->default(NULL);
-            $table->string('section', 100)->unique();
             $table->softDeletes();
             $table->timestamps();
         });

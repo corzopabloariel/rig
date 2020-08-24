@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Help;
+use App\Text;
 use Illuminate\Http\Request;
 
-class HelpController extends Controller
+class TextController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -14,13 +14,13 @@ class HelpController extends Controller
      */
     public function index()
     {
-        $helps = Help::orderBy("code")->paginate(PAGINATE);
+        $texts = Text::orderBy("code")->paginate(PAGINATE);
 
         $data = [
             "view" => "element",
-            "url_search" => \Auth::user()->redirect() . "/helps",
-            "elements" => $helps,
-            "entity" => "help",
+            "url_search" => \Auth::user()->redirect() . "/texts",
+            "elements" => $texts,
+            "entity" => "text",
             "placeholder" => "Código"
         ];
         return view('home',compact('data'));
@@ -44,51 +44,51 @@ class HelpController extends Controller
      */
     public function store(Request $request)
     {
-        return (new \App\Http\Controllers\Auth\BasicController)->store($request, null, new Help);
+        return (new \App\Http\Controllers\Auth\BasicController)->store($request, null, new Text);
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  \App\Help  $help
+     * @param  \App\Text  $text
      * @return \Illuminate\Http\Response
      */
-    public function show(Help $help)
+    public function show(Text $text)
     {
-        return $help;
+        return $text;
     }
 
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Help  $help
+     * @param  \App\Text  $text
      * @return \Illuminate\Http\Response
      */
-    public function edit(Help $help)
+    public function edit(Text $text)
     {
-        return $help;
+        return $text;
     }
 
     /**
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Help  $help
+     * @param  \App\Text  $text
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Help $help)
+    public function update(Request $request, Text $text)
     {
-        return (new \App\Http\Controllers\Auth\BasicController)->store($request, $help, new Help);
+        return (new \App\Http\Controllers\Auth\BasicController)->store($request, $text, new Text);
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Help  $help
+     * @param  \App\Text  $text
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Help $help)
+    public function destroy(Text $text)
     {
-        return (new \App\Http\Controllers\Auth\BasicController)->delete($help, (new Help)->getFillable());
+        return (new \App\Http\Controllers\Auth\BasicController)->delete($label, (new Label)->getFillable());
     }
 }

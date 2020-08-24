@@ -20,7 +20,7 @@ define("MENU",
                 ], [
                     "name" => "Rótulos",
                     "icon" => "nav-pyrus__icon fas fa-tag",
-                    "url" => \URL::to("root/label"),
+                    "url" => \URL::to("root/labels"),
                 ], [
                     "name" => "Imágenes",
                     "icon" => "nav-pyrus__icon far fa-images",
@@ -33,7 +33,7 @@ define("MENU",
             "id" => "operaciones",
             "name" => "Operaciones",
             "icon" => "nav-pyrus__icon fab fa-redhat",
-            "url" => \URL::to("root/operaciones")
+            "url" => \URL::to("root/operations")
         ], [
             "id" => "declaraciones",
             "name" => "Declaraciones",
@@ -43,7 +43,7 @@ define("MENU",
             "id" => "textos",
             "name" => "Textos",
             "icon" => "nav-pyrus__icon fas fa-file-alt",
-            "url" => \URL::to("root/textos")
+            "url" => \URL::to("root/texts")
         ]
     ]
 );

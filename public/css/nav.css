@@ -184,12 +184,11 @@ a[data-toggle="collapse"] {
 #content {
     width: calc(100% - 120px);
     transition: all 0.3s;
-    overflow-y: scroll;
     position: relative;
     z-index: 0;
     margin-left: 120px;
     padding-bottom: 2em;
-    height: calc(100vh - var( --hMenu) - .9px);
+    height: calc(100vh - var( --hMenu));
 }
 #content > .title {
     padding: 20px;

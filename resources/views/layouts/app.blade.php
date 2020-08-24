@@ -8,6 +8,10 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <meta name="public-path" content="{{ asset('/') }}">
     <meta name="public" content="{{ url()->current() }}">
+    <meta name="entity" content="{{ $data['entity'] ?? '' }}">
+    @if (Auth::user())
+        <meta name="url" content="{{ Auth::user()->redirect() }}">
+    @endif
 
     <title>{{ 'RIG - Roberts Ingrey Group' }}</title>
 
@@ -22,7 +26,6 @@
 </head>
 <body>
     @stack('modal')
-    <input type="hidden" value="{{$data['entity'] ?? ''}}" id="pyrus__entity">
     <div class="body" id="app">
         @yield('content')
     </div>

@@ -4,10 +4,11 @@
     color: #777777;
     font-family: 'Montserrat', sans-serif;
     font-size: 14px;
-    min-height: 100vh;
+    height: 100vh;
+    position: relative;
 }
-.body__container {
-    min-height: inherit;
+html {
+    overflow-y: scroll;
 }
 
 .color {

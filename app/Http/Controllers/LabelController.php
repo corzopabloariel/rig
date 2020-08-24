@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Help;
+use App\Label;
 use Illuminate\Http\Request;
 
-class HelpController extends Controller
+class LabelController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -14,13 +14,13 @@ class HelpController extends Controller
      */
     public function index()
     {
-        $helps = Help::orderBy("code")->paginate(PAGINATE);
+        $labels = Label::orderBy("code")->paginate(PAGINATE);
 
         $data = [
             "view" => "element",
-            "url_search" => \Auth::user()->redirect() . "/helps",
-            "elements" => $helps,
-            "entity" => "help",
+            "url_search" => \Auth::user()->redirect() . "/labels",
+            "elements" => $labels,
+            "entity" => "label",
             "placeholder" => "Código"
         ];
         return view('home',compact('data'));
@@ -44,51 +44,51 @@ class HelpController extends Controller
      */
     public function store(Request $request)
     {
-        return (new \App\Http\Controllers\Auth\BasicController)->store($request, null, new Help);
+        return (new \App\Http\Controllers\Auth\BasicController)->store($request, null, new Label);
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  \App\Help  $help
+     * @param  \App\Label  $label
      * @return \Illuminate\Http\Response
      */
-    public function show(Help $help)
+    public function show(Label $label)
     {
-        return $help;
+        return $label;
     }
 
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Help  $help
+     * @param  \App\Label  $label
      * @return \Illuminate\Http\Response
      */
-    public function edit(Help $help)
+    public function edit(Label $label)
     {
-        return $help;
+        return $label;
     }
 
     /**
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Help  $help
+     * @param  \App\Label  $label
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Help $help)
+    public function update(Request $request, Label $label)
     {
-        return (new \App\Http\Controllers\Auth\BasicController)->store($request, $help, new Help);
+        return (new \App\Http\Controllers\Auth\BasicController)->store($request, $label, new Label);
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Help  $help
+     * @param  \App\Label  $label
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Help $help)
+    public function destroy(Label $label)
     {
-        return (new \App\Http\Controllers\Auth\BasicController)->delete($help, (new Help)->getFillable());
+        return (new \App\Http\Controllers\Auth\BasicController)->delete($label, (new Label)->getFillable());
     }
 }

@@ -20,11 +20,11 @@
 <script src="{{ asset('js/alertify.js') }}"></script>
 <script src="{{ asset('js/shortcut.js') }}"></script>
 
-<script src="{{ asset('js/declarations.js') }}"></script>
 <script src="{{ asset('js/pyrus.js') }}"></script>
 <script src="{{ asset('js/basic.js') }}"></script>
+<script src="{{ asset('js/declarations.js') }}"></script>
 <script>
-    window.pyrus = new Pyrus(document.querySelector("#pyrus__entity").value);
+    window.pyrus = new Pyrus(entity);
     /** -------------------------------------
      *      INICIO
      ** ------------------------------------- */

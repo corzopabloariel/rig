@@ -19,6 +19,8 @@ window.axios.defaults.headers.common = {
 };
 const sourceAxios = axios.CancelToken.source();
 const url_simple = document.querySelector('meta[name="public-path"]').content;
+const entity = document.querySelector('meta[name="entity"]').content;
+const url_basic = document.querySelector('meta[name="url"]').content + "/";
 function* fibo() {
     let a = 1;
     let b = 1;
@@ -312,7 +314,7 @@ function remove_(t, class_) {
 function edit(t, id, disabled = 0) {
     const entidad = Array.isArray(window.pyrus) ? window.pyrus[0].entidad : window.pyrus;
     t.disabled = true
-    entidad.one(`${url_simple}adm/${entidad.tableDB}/${id}`, res => {
+    entidad.one(`${url_simple}${url_basic}${entidad.tableDB}/${id}`, res => {
         $('[data-toggle="tooltip"]').tooltip('hide');
         t.disabled = false;
         add(null, parseInt(id), res.data, disabled);
@@ -328,7 +330,7 @@ function edit(t, id, disabled = 0) {
  */
 function erase(t, id) {
     const entidad = Array.isArray(window.pyrus) ? window.pyrus[0].entidad : window.pyrus;
-    entidad.delete(t, {title: "ATENCIÓN", body: "¿Eliminar registro?"}, `${url_simple}adm/${entidad.tableDB}/${id}`);
+    entidad.delete(t, {title: "ATENCIÓN", body: "¿Eliminar registro?"}, `${url_simple}${url_basic}${entidad.tableDB}/${id}`);
 }
 /**
  * @description Clonar un registro. Trae la información que corresponda
@@ -340,7 +342,7 @@ function erase(t, id) {
 function clone(t, id, disabled = 0) {
     const entidad = Array.isArray(window.pyrus) ? window.pyrus[0].entidad : window.pyrus;
     t.disabled = true
-    entidad.one(`${url_simple}adm/${entidad.tableDB}/${id}/edit`, res => {
+    entidad.one(`${url_simple}${url_basic}${entidad.tableDB}/${id}/edit`, res => {
         $('[data-toggle="tooltip"]').tooltip('hide');
         t.disabled = false;
         add(null, parseInt(id), res.data, disabled, true);
@@ -684,7 +686,7 @@ function add(t, id = 0, data = null, disabled = 0, clone = false) {
     const modal = document.querySelector("#formModal");
     let label = document.querySelector("#formModalLabel");
     let form = document.querySelector("#form");
-    let action = `${url_simple}adm/${entidad.tableDB}`;
+    let action = `${url_simple}${url_basic}${entidad.tableDB}`;
     if (disabled) {
         let form_control = form.querySelectorAll(".form-control");
         Array.prototype.forEach.call(form_control, f => {
@@ -754,7 +756,7 @@ removeFile = (t) => {
         tabla: t.dataset.table,
         idPadre: window.data.elements.id
     };
-    deleteFile(t, `${url_simple}adm/file`, "¿Eliminar archivo de imagen?", attr, data => {
+    deleteFile(t, `${url_simple}${url_basic}file`, "¿Eliminar archivo de imagen?", attr, data => {
         if (data.error === 0) {
             t.parentElement.previousElementSibling.src = "";
             let details = t.parentElement.previousElementSibling.previousElementSibling.querySelectorAll(".image--wh__details");
@@ -859,14 +861,14 @@ shortcut.add( "Alt+Ctrl+N" , function () {
     target: document
 });
 shortcut.add( "Alt+Ctrl+Q" , function () {
-    //window.location = `${url_simple}adm/url`;
+    //window.location = `${url_simple}${url_basic}url`;
 }, {
     type: "keydown",
     propagate: true,
     target: document
 });
 shortcut.add( "Alt+Ctrl+C" , function () {
-    window.location = `${url_simple}adm/comentarios`;
+    window.location = `${url_simple}${url_basic}comentarios`;
 }, {
     type: "keydown",
     propagate: true,
@@ -926,7 +928,7 @@ function saveEdit(t) {
     formData.append("ATRIBUTOS",JSON.stringify([{ DATA: window.entidad_eventual.objetoSimple , TIPO: "U" }]));
     axios({
         method: "post",
-        url: `${url_simple}adm/edit`,
+        url: `${url_simple}${url_basic}edit`,
         data: formData,
         responseType: 'json',
         config: { headers: {'Content-Type': 'multipart/form-data' }}
@@ -943,7 +945,15 @@ function saveEdit(t) {
             });
             let td = document.createElement("td");
             td.style.maxWidth = "500px";
-            window.td_eventual.innerHTML = window.entidad_eventual.convert(res.data.obj[t.dataset.key], td, url_simple, window.entidad_eventual.especificacion[t.dataset.key].TIPO, window.entidad_eventual.especificacion[t.dataset.key], null, columna).innerHTML;
+            window.td_eventual.innerHTML = window.entidad_eventual.convert(res.data.obj[t.dataset.key],
+                td,
+                url_simple,
+                window.entidad_eventual.especificacion[t.dataset.key].TIPO,
+                window.entidad_eventual.especificacion[t.dataset.key],
+                null,
+                columna,
+                res.data.obj.id
+                ).innerHTML;
             const edit__check = window.td_eventual.querySelectorAll(".edit--check");
             if (edit__check.length > 0) {
                 Array.prototype.forEach.call(edit__check, e => {
@@ -1027,7 +1037,7 @@ function editableSave(evt) {
     formData.set("id", this.dataset.id);
     axios({
         method: "post",
-        url: `${url_simple}adm/edit`,
+        url: `${url_simple}${url_basic}edit`,
         data: formData,
         responseType: 'json',
         config: { headers: {'Content-Type': 'multipart/form-data' }}

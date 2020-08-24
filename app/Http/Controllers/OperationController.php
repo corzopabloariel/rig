@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Help;
+use App\Operation;
 use Illuminate\Http\Request;
 
-class HelpController extends Controller
+class OperationController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -14,14 +14,14 @@ class HelpController extends Controller
      */
     public function index()
     {
-        $helps = Help::orderBy("code")->paginate(PAGINATE);
+        $operations = Operation::orderBy("name")->paginate(PAGINATE);
 
         $data = [
             "view" => "element",
-            "url_search" => \Auth::user()->redirect() . "/helps",
-            "elements" => $helps,
-            "entity" => "help",
-            "placeholder" => "Código"
+            "url_search" => \Auth::user()->redirect() . "/operations",
+            "elements" => $operations,
+            "entity" => "operation",
+            "placeholder" => "Nombre"
         ];
         return view('home',compact('data'));
     }
@@ -44,51 +44,51 @@ class HelpController extends Controller
      */
     public function store(Request $request)
     {
-        return (new \App\Http\Controllers\Auth\BasicController)->store($request, null, new Help);
+        return (new \App\Http\Controllers\Auth\BasicController)->store($request, null, new Operation, null, false, ["code" => (new Operation)->generateCode()]);
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  \App\Help  $help
+     * @param  \App\Operation  $operation
      * @return \Illuminate\Http\Response
      */
-    public function show(Help $help)
+    public function show(Operation $operation)
     {
-        return $help;
+        return $operation;
     }
 
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Help  $help
+     * @param  \App\Operation  $operation
      * @return \Illuminate\Http\Response
      */
-    public function edit(Help $help)
+    public function edit(Operation $operation)
     {
-        return $help;
+        return $operation;
     }
 
     /**
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Help  $help
+     * @param  \App\Operation  $operation
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Help $help)
+    public function update(Request $request, Operation $operation)
     {
-        return (new \App\Http\Controllers\Auth\BasicController)->store($request, $help, new Help);
+        return (new \App\Http\Controllers\Auth\BasicController)->store($request, $operation, new Operation);
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Help  $help
+     * @param  \App\Operation  $operation
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Help $help)
+    public function destroy(Operation $operation)
     {
-        return (new \App\Http\Controllers\Auth\BasicController)->delete($help, (new Help)->getFillable());
+        return (new \App\Http\Controllers\Auth\BasicController)->delete($operation, (new Operation)->getFillable());
     }
 }
