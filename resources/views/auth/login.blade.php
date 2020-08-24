@@ -11,8 +11,8 @@
         </div>
     </div>
 @endif
-<div class="container-fluid body__container">
-    <div class="row justify-content-center align-content-center body__container">
+<div class="container-fluid h-100">
+    <div class="row justify-content-center align-content-center h-100">
         <div class="col-12 col-sm-9 col-md-6 col-lg-5 col-xl-4">
             <div class="card shadow-sm">
                 <div class="card-header">

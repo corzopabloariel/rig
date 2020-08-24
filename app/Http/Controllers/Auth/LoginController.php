@@ -42,7 +42,10 @@ class LoginController extends Controller
             $this->fireLockoutEvent($request);
             return $this->sendLockoutResponse($request);
         }
-        if ($this->guard()->validate($this->credentials($request))) {
+        unset($requestData["email"]);
+        $email = \App\Email::where("email", $request->email)->first();
+        if ($email) {// $this->guard()->validate($this->credentials($request))
+            $requestData["id"] = $email->user_id;
             if (Auth::attempt($requestData))
                 return redirect(Auth::user()->redirect());
             else

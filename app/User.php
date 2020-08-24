@@ -20,15 +20,6 @@ class User extends Authenticatable
     ];
 
     /**
-     * @var array
-     */
-    /*protected $profile = [
-        'root',
-        'adm',
-        'user'
-    ];*/
-
-    /**
      * The attributes that are mass assignable.
      *
      * @var array
@@ -36,7 +27,9 @@ class User extends Authenticatable
     protected $fillable = [
         'name',
         'lastname',
-        'email',
+        'comitente',
+        'document_number',
+        'document_type',
         'password',
         'profile'
     ];
@@ -49,15 +42,6 @@ class User extends Authenticatable
     protected $hidden = [
         'password',
         'remember_token',
-    ];
-
-    /**
-     * The attributes that should be cast to native types.
-     *
-     * @var array
-     */
-    protected $casts = [
-        'email_verified_at' => 'datetime',
     ];
 
     public function hasRole($role)
@@ -78,5 +62,10 @@ class User extends Authenticatable
     public function fullname()
     {
         return trim($this->name . " " . $this->lastname);
+    }
+
+    public function emails()
+    {
+        return $this->hasMany("App\Email", "user_id");
     }
 }
