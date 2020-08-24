@@ -26,13 +26,22 @@ Route::group(['middleware' => ['auth', 'role:root'], 'prefix' => 'root'], functi
     Route::get('update', ['uses' => 'Auth\BasicController@update', 'as' => 'update.index']);
 
     /**
+     * Users
+     */
+    Route::get('users', ['uses' => 'UserController@index', 'as' => 'users.index']);
+    Route::get('users/{user}', ['uses' => 'UserController@show', 'as' => 'users.show']);
+    Route::post('users', ['uses' => 'UserController@store', 'as' => 'users.store']);
+    Route::post('users/{user}', ['uses' => 'UserController@update', 'as' => 'users.update']);
+    Route::delete('users/{user}', ['uses' => 'UserController@destroy', 'as' => 'users.destroy']);
+
+    /**
      * Helps
      */
     Route::get('helps', ['uses' => 'HelpController@index', 'as' => 'helps.index']);
-    Route::get('helps/{helps}', ['uses' => 'HelpController@show', 'as' => 'helps.show']);
+    Route::get('helps/{help}', ['uses' => 'HelpController@show', 'as' => 'helps.show']);
     Route::post('helps', ['uses' => 'HelpController@store', 'as' => 'helps.store']);
-    Route::post('helps/{helps}', ['uses' => 'HelpController@update', 'as' => 'helps.update']);
-    Route::delete('helps/{helps}', ['uses' => 'HelpController@destroy', 'as' => 'helps.destroy']);
+    Route::post('helps/{help}', ['uses' => 'HelpController@update', 'as' => 'helps.update']);
+    Route::delete('helps/{help}', ['uses' => 'HelpController@destroy', 'as' => 'helps.destroy']);
 
     /**
      * Labels

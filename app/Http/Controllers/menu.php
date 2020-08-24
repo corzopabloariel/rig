@@ -44,6 +44,13 @@ define("MENU",
             "name" => "Textos",
             "icon" => "nav-pyrus__icon fas fa-file-alt",
             "url" => \URL::to("root/texts")
+        ], [
+            "separar" => 1
+        ], [
+            "id" => "usuarios",
+            "name" => "Usuarios",
+            "icon" => "nav-pyrus__icon fas fa-users",
+            "url" => \URL::to("root/users")
         ]
     ]
 );

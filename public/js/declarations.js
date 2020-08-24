@@ -87,4 +87,35 @@ const ENTIDADES = {
             }
         ],
     },
+
+    user: {
+        TABLE: "users",
+        ROUTE: "users",
+        ATRIBUTOS: {
+            name: {TIPO:"TP_STRING",RULE: "required|max:100",MAXLENGTH:100,NECESARIO:1,LABEL:1,VISIBILIDAD:"TP_VISIBLE",NOMBRE:"nombre"},
+            lastname: {TIPO:"TP_STRING",RULE: "max:150",MAXLENGTH:150,LABEL:1,VISIBILIDAD:"TP_VISIBLE",NOMBRE:"Apellido"},
+            password: {TIPO:"TP_PASSWORD",VISIBILIDAD:"TP_VISIBLE_FORM",LABEL:1,NOMBRE:"contraseña",HELP:"SOLO PARA EDICIÓN - para no cambiar la contraseña, deje el campo vacío"},
+            profile: {TIPO:"TP_ENUM",VISIBILIDAD:"TP_VISIBLE",LABEL:1,ENUM:[{id: "root", text: "ROOT"}, {id: "adm", text: "Administrador"}, {id: "user", text: "Usuario"}],NOMBRE:"Tipo",CLASS:"form--input", NECESARIO: 1}
+        },
+        FORM: [
+            {
+                '<div class="col-12 col-md-6">/name/</div><div class="col-12 col-md-6">/lastname/</div>' : ['name', 'lastname']
+            }, {
+                '<div class="col-12 col-md-6">/password/</div><div class="col-12 col-md-6">/profile/</div>' : ['password', 'profile']
+            }
+        ]
+    },
+    user_email: {
+        ONE: 1,
+        MULTIPLE: "emails",
+        NOMBRE: "Emails",
+        ATRIBUTOS: {
+            email: {TIPO:"TP_EMAIL", RULE: "required",LABEL:1, NECESARIO: 1,MAXLENGTH:150,VISIBILIDAD:"TP_VISIBLE"}
+        },
+        FORM: [
+            {
+                '<div class="col-12">/email/</div>' : ['email']
+            }
+        ]
+    },
 };

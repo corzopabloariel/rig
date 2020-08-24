@@ -695,7 +695,7 @@ class Pyrus {
                     break;
             }
         }
-        if (data === null) {
+        if (data === null || data === undefined) {
             console.warn( `### SIN DATOS ###` );
             return null;
         }

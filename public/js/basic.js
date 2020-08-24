@@ -723,9 +723,28 @@ function add(t, id = 0, data = null, disabled = 0, clone = false) {
         form.action = action;
         form.method = method;
     }
-    if (Array.isArray(window.pyrus))
-        window.pyrus.forEach(e => e.entidad.show(url_simple, data));
-    else
+    if (Array.isArray(window.pyrus)) {
+        window.pyrus.forEach(p => {
+            switch (p.tipo) {
+                case "U":
+                    if (p.column) {
+                        if (data[p.column])
+                            p.entidad.show(url_simple, data[p.column]);
+                    } else
+                        p.entidad.show(url_simple, data);
+                break;
+                case "A":
+                case "M":
+                    if (data[p.column])
+                        data[p.column].forEach(a => {
+                            const func = new Function(`${p.function}Function(${JSON.stringify(a)})`);
+                            func.call(null);
+                        });
+                break;
+            }
+        });
+        // window.pyrus.forEach(e => e.entidad.show(url_simple, data));
+    } else
         entidad.show(url_simple, data);
     if (window.data.hidden)
         window.data.hidden.forEach(a => {
