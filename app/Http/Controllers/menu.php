@@ -54,3 +54,14 @@ define("MENU",
         ]
     ]
 );
+
+define("MENU_ADM",
+    [
+        [
+            "id" => "declaraciones",
+            "name" => "Declaraciones",
+            "icon" => "nav-pyrus__icon fas fa-spell-check",
+            "url" => \URL::to("root/declaraciones")
+        ]
+    ]
+);

@@ -26,4 +26,14 @@ class HomeController extends Controller
         $data = ["view" => "home"];
         return view('home',compact('data'));
     }
+
+    public function client()
+    {
+        $data = [
+            "view" => "home",
+            "operations" => \App\Operation::orderBy("name")->get(),
+            "texts" => \App\Text::where("code", "LIKE", "TXT.STA%")->pluck("data", "code")
+        ];
+        return view('home',compact('data'));
+    }
 }

@@ -49,7 +49,7 @@ class LoginController extends Controller
             if (Auth::attempt($requestData))
                 return redirect(Auth::user()->redirect());
             else
-                return back()->withErrors(['mssg' => "Datos de {$request->email} incorrectos"]);
+                return back()->withErrors(['mssg' => "Datos de {$request->email} incorrectos"])->withInput();
         } else {
             $this->incrementLoginAttempts($request);
             return back()->withErrors(['mssg' => "Datos de {$request->email} no encontrados"])->withInput();

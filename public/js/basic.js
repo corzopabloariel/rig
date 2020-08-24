@@ -723,7 +723,7 @@ function add(t, id = 0, data = null, disabled = 0, clone = false) {
         form.action = action;
         form.method = method;
     }
-    if (Array.isArray(window.pyrus)) {
+    if (Array.isArray(window.pyrus) && data !== null) {
         window.pyrus.forEach(p => {
             switch (p.tipo) {
                 case "U":

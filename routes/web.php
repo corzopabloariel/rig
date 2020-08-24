@@ -71,6 +71,10 @@ Route::group(['middleware' => ['auth', 'role:root'], 'prefix' => 'root'], functi
     Route::delete('operations/{operation}', ['uses' => 'OperationController@destroy', 'as' => 'operations.destroy']);
 });
 
-Route::group(['middleware' => ['auth', 'role:adm'], 'prefix' => 'adm'], function() {});
+Route::group(['middleware' => ['auth', 'role:adm'], 'prefix' => 'adm'], function() {
+    Route::get('/', ['uses' => 'HomeController@index' , 'as' => 'adm']);
+});
 
-Route::group(['middleware' => ['auth', 'role:user'], 'prefix' => 'client'], function() {});
+Route::group(['middleware' => ['auth', 'role:user'], 'prefix' => 'client'], function() {
+    Route::get('/', ['uses' => 'HomeController@client' , 'as' => 'client']);
+});

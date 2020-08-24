@@ -478,7 +478,7 @@ class BasicController extends Controller
         if ($flag)
             return json_encode(["error" => 1, "msg" => "Error en los datos de ingreso."]);
         else {
-            //try {
+            try {
                 $OBJ = self::object($request, $data);
                 if ($rule) {
                     $flag = true;
@@ -509,9 +509,9 @@ class BasicController extends Controller
                     $data->fill($OBJ);
                     $data->save();
                 }
-            /*} catch (\Throwable $th) {
+            } catch (\Throwable $th) {
                 return json_encode(["error" => 1, "msg" => $th->errorInfo[2]]);
-            }*/
+            }
             return json_encode(["success" => true, "error" => 0, "data" => $data]);
         }
     }
