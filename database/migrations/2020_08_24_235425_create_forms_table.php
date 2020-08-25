@@ -16,7 +16,7 @@ class CreateFormsTable extends Migration
         Schema::create('forms', function (Blueprint $table) {
             $table->id();
             $table->integer('order')->nullable()->default(NULL);
-            $table->enum('type', ['input:text', 'input:number', 'input:check', 'textarea', 'select']);
+            $table->enum('type', ['input:text', 'input:number', 'input:email', 'input:phone', 'input:check', 'textarea', 'select']);
             $table->string('name', 30)->unique();
             $table->json('data')->nullable()->default(NULL);
             $table->boolean('required')->default(false);
