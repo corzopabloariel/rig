@@ -1,6 +1,8 @@
 <section class="my-3">
     <div class="container-fluid">
-        @include('layouts.general.form', ['buttonADD' => 1, 'form' => 0, 'close' => 1, 'modal' => 1])
+        @if (!isset($data["notForm"]))
+            @include('layouts.general.form', ['buttonADD' => 1, 'form' => 0, 'close' => 1, 'modal' => 1])
+        @endif
         @include('layouts.general.table', [
             "paginate" => $data["elements"],
             "form" => [

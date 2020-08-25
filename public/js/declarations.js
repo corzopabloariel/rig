@@ -88,6 +88,17 @@ const ENTIDADES = {
         ],
     },
 
+    client: {
+        TABLE: "users",
+        ROUTE: "users",
+        ATRIBUTOS: {
+            name: {TIPO:"TP_STRING",RULE: "required|max:100",MAXLENGTH:100,NECESARIO:1,LABEL:1,VISIBILIDAD:"TP_VISIBLE",NOMBRE:"nombre", NOTEDIT: 1},
+            lastname: {TIPO:"TP_STRING",RULE: "max:150",MAXLENGTH:150,LABEL:1,VISIBILIDAD:"TP_VISIBLE",NOMBRE:"Apellido", NOTEDIT: 1},
+            password: {TIPO:"TP_PASSWORD",VISIBILIDAD:"TP_VISIBLE_FORM",LABEL:1,NOMBRE:"contraseña",HELP:"SOLO PARA EDICIÓN - para no cambiar la contraseña, deje el campo vacío"},
+            comitente: {TIPO:"TP_ENTERO",LABEL:1, VISIBILIDAD:"TP_VISIBLE", NOTEDIT: 1, NOMBRE: "comitente"},
+            document_number: {TIPO:"TP_ENTERO",LABEL:1, VISIBILIDAD:"TP_VISIBLE", NOTEDIT: 1, NOMBRE: "# documento"}
+        }
+    },
     user: {
         TABLE: "users",
         ROUTE: "users",

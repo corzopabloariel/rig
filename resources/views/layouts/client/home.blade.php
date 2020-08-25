@@ -7,7 +7,7 @@
             <h1 class="text-center text-welcome mt-4">Bienvenido {{Auth::user()->fullname()}}</h1>
             @if ($data["texts"]->isNotEmpty())
                 @foreach($data["texts"] AS $code => $html)
-                {!! $html !!}
+                {!! textPrint($code) !!}
                 @endforeach
             @endif
         </div>

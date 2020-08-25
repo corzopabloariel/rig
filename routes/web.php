@@ -21,6 +21,7 @@ Auth::routes();
 Route::get('logout', ['uses' => 'Auth\LoginController@logout' , 'as' => 'logout']);
 Route::group(['middleware' => ['auth', 'role:root'], 'prefix' => 'root'], function() {
     Route::get('/', ['uses' => 'HomeController@index' , 'as' => 'root']);
+    Route::match(['post', 'get'], 'forms', ['uses' => 'HomeController@forms' , 'as' => 'forms']);
     Route::delete('file', ['uses' => 'Auth\BasicController@deleteFile', 'as' => 'deleteFile']);
     Route::post('edit', ['uses' => 'Auth\BasicController@edit', 'as' => 'edit']);
     Route::get('update', ['uses' => 'Auth\BasicController@update', 'as' => 'update.index']);
@@ -29,6 +30,7 @@ Route::group(['middleware' => ['auth', 'role:root'], 'prefix' => 'root'], functi
      * Users
      */
     Route::get('users', ['uses' => 'UserController@index', 'as' => 'users.index']);
+    Route::get('clients', ['uses' => 'UserController@clients', 'as' => 'clients.index']);
     Route::get('users/{user}', ['uses' => 'UserController@show', 'as' => 'users.show']);
     Route::post('users', ['uses' => 'UserController@store', 'as' => 'users.store']);
     Route::post('users/{user}', ['uses' => 'UserController@update', 'as' => 'users.update']);

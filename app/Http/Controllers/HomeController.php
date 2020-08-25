@@ -36,4 +36,12 @@ class HomeController extends Controller
         ];
         return view('home',compact('data'));
     }
+
+    public function forms(Request $request)
+    {
+        $data = [
+            "view" => "form"
+        ];
+        return view('home',compact('data'));
+    }
 }

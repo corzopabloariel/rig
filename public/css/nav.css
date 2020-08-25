@@ -188,7 +188,6 @@ a[data-toggle="collapse"] {
     z-index: 0;
     margin-left: 120px;
     padding-bottom: 2em;
-    height: calc(100vh - var( --hMenu));
 }
 #content > .title {
     padding: 20px;

@@ -12,16 +12,33 @@ class UserController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        $users = User::where("id", "!=", \Auth::user()->id)->orderBy("profile")->orderBy("comitente")->paginate(PAGINATE);
-
+        $users = User::where("id", "!=", \Auth::user()->id)->where("profile", "NOT LIKE", "user")->orderBy("profile")->orderBy("comitente")->paginate(PAGINATE);
         $data = [
             "view" => "element.users",
             "url_search" => \Auth::user()->redirect() . "/users",
             "elements" => $users,
             "entity" => "user",
-            "placeholder" => "Nombre completo, Comitente o Nro. Documento"
+            "placeholder" => "Nombre completo o Email"
+        ];
+        return view('home',compact('data'));
+    }
+    /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function clients(Request $request)
+    {
+        $users = User::where("id", "!=", \Auth::user()->id)->where("profile", "LIKE", "user")->orderBy("comitente")->paginate(PAGINATE);
+        $data = [
+            "view" => "element.users",
+            "url_search" => \Auth::user()->redirect() . "/clients",
+            "elements" => $users,
+            "entity" => "client",
+            "notForm" => 1,
+            "placeholder" => "Nombre completo, comitente o Email"
         ];
         return view('home',compact('data'));
     }

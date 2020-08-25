@@ -51,6 +51,16 @@ define("MENU",
             "name" => "Usuarios",
             "icon" => "nav-pyrus__icon fas fa-users",
             "url" => \URL::to("root/users")
+        ], [
+            "id" => "clientes",
+            "name" => "Clientes",
+            "icon" => "nav-pyrus__icon fas fa-user-tie",
+            "url" => \URL::to("root/clients")
+        ], [
+            "id" => "formulario",
+            "name" => "Formulario",
+            "icon" => "nav-pyrus__icon fab fa-wpforms",
+            "url" => \URL::to("root/forms")
         ]
     ]
 );

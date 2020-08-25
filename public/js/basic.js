@@ -1141,7 +1141,10 @@ function init(callbackOK, normal = true, widthElements = true, type = "table", w
     window.refresh = refresh;
     let targetElements = document.querySelector("#wrapper-tabla");
     const entidad = Array.isArray(window.pyrus) ? window.pyrus[0].entidad : window.pyrus;
-    editor(window.targetForm);
+    if (window.targetForm)
+        editor(window.targetForm);
+    else
+        withAction = false;
     if (normal) {
         if (withAction)
             targetElements.appendChild(entidad.table([{NAME: "ACCIONES", COLUMN: "acciones", WIDTH: "100px"}]));
