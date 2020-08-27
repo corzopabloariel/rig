@@ -20,7 +20,8 @@ class UserController extends Controller
             "url_search" => \Auth::user()->redirect() . "/users",
             "elements" => $users,
             "entity" => "user",
-            "placeholder" => "Nombre completo o Email"
+            "placeholder" => "Nombre completo o Email",
+            "section" => "Usuarios"
         ];
         return view('home',compact('data'));
     }
@@ -38,7 +39,8 @@ class UserController extends Controller
             "elements" => $users,
             "entity" => "client",
             "notForm" => 1,
-            "placeholder" => "Nombre completo, comitente o Email"
+            "placeholder" => "Nombre completo, comitente o Email",
+            "section" => "Clientes"
         ];
         return view('home',compact('data'));
     }

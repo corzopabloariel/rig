@@ -16,9 +16,9 @@ class CreateStatementuserTable extends Migration
         Schema::create('statementuser', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('statement_id');
-            $table->unsignedBigInteger('user_id')->unique();
+            $table->unsignedBigInteger('user_id');
             $table->text('obs')->nullable()->default(NULL);
-
+            $table->softDeletes();
             $table->timestamps();
             $table->foreign('statement_id')->references('id')->on('statements')->onDelete('cascade');
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');

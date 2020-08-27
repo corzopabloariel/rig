@@ -16,6 +16,36 @@ class HomeController extends Controller
         $this->middleware('auth');
     }
 
+    public function datos(Request $request)
+    {
+        if (empty($request->all())) {
+            $datos = \App\Rig::first();
+            if(empty($datos)) {
+                $datos = \App\Rig::create([
+                    "texts" => [],
+                    "images" => []
+                ]);
+            }
+            $data = [
+                "view" => "rig",
+                "elements" => $datos,
+                "section" => "Datos básicos"
+            ];
+            return view('home',compact('data'));
+        }
+
+        $data = \App\Rig::first();
+        $aux = (new Auth\BasicController)->store($request, $data, new \App\Rig, null, true);
+        $OBJ = json_decode($aux, true);
+        if ($OBJ["error"] == 0) {
+            if ($OBJ["success"]) {
+                $data->fill($OBJ["data"]);
+                $data->save();
+            }
+        }
+        return $aux;
+    }
+
     /**
      * Show the application dashboard.
      *
@@ -43,7 +73,8 @@ class HomeController extends Controller
         if (empty($dataRequest)) {
             $data = [
                 "forms" => \App\Form::orderBy("order")->get()->toArray(),
-                "view" => "form"
+                "view" => "form",
+                "section" => "Formulario"
             ];
             return view('home',compact('data'));
         }

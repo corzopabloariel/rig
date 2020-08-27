@@ -1,5 +1,8 @@
 <section class="my-3">
     <div class="container-fluid">
+        @isset($data["section"])
+            @include('layouts.general.breadcrumb', ['section' => $data["section"]])
+        @endisset
         @if (!isset($data["notForm"]))
             @include('layouts.general.form', ['buttonADD' => 1, 'form' => 0, 'close' => 1, 'modal' => 1])
         @endif

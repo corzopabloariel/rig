@@ -22,9 +22,28 @@ Route::get('logout', ['uses' => 'Auth\LoginController@logout' , 'as' => 'logout'
 Route::group(['middleware' => ['auth', 'role:root'], 'prefix' => 'root'], function() {
     Route::get('/', ['uses' => 'HomeController@index' , 'as' => 'root']);
     Route::match(['post', 'get'], 'forms', ['uses' => 'HomeController@forms' , 'as' => 'forms']);
+    Route::match(['post', 'get'], 'datos', ['uses' => 'HomeController@datos' , 'as' => 'datos']);
     Route::delete('file', ['uses' => 'Auth\BasicController@deleteFile', 'as' => 'deleteFile']);
     Route::post('edit', ['uses' => 'Auth\BasicController@edit', 'as' => 'edit']);
     Route::get('update', ['uses' => 'Auth\BasicController@update', 'as' => 'update.index']);
+
+    /**
+     * Parameters
+     */
+    Route::get('parameters', ['uses' => 'ParameterController@index', 'as' => 'parameters.index']);
+    Route::get('parameters/{parameter}', ['uses' => 'ParameterController@show', 'as' => 'parameters.show']);
+    Route::post('parameters', ['uses' => 'ParameterController@store', 'as' => 'parameters.store']);
+    Route::post('parameters/{parameter}', ['uses' => 'ParameterController@update', 'as' => 'parameters.update']);
+    Route::delete('parameters/{parameter}', ['uses' => 'ParameterController@destroy', 'as' => 'parameters.destroy']);
+
+    /**
+     * Images
+     */
+    Route::get('images', ['uses' => 'ImageController@index', 'as' => 'images.index']);
+    Route::get('images/{image}', ['uses' => 'ImageController@show', 'as' => 'images.show']);
+    Route::post('images', ['uses' => 'ImageController@store', 'as' => 'images.store']);
+    Route::post('images/{image}', ['uses' => 'ImageController@update', 'as' => 'images.update']);
+    Route::delete('images/{image}', ['uses' => 'ImageController@destroy', 'as' => 'images.destroy']);
 
     /**
      * Users

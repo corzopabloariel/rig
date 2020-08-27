@@ -1,5 +1,6 @@
 <?php
-define("PAGINATE", 15);
+$data = \App\Parameter::where("type", "paginate")->first();
+define("PAGINATE", $data ? $data->value : 15);
 
 define("MENU",
     [
@@ -7,13 +8,9 @@ define("MENU",
             "id" => "home",
             "name" => "Home",
             "icon" => "nav-pyrus__icon fas fa-home",
-            "urls" => [\URL::to("root"), \URL::to("root/helps"), \URL::to("root/labels"), \URL::to('root/images')],
+            "urls" => [\URL::to("root"), \URL::to("root/helps"), \URL::to("root/labels")],
             "submenu" => [
                 [
-                    "name" => "Inicio",
-                    "icon" => "nav-pyrus__icon fab fa-trello",
-                    "url" => \URL::to("root"),
-                ], [
                     "name" => "Ayudas",
                     "icon" => "nav-pyrus__icon fas fa-question-circle",
                     "url" => \URL::to("root/helps"),
@@ -21,10 +18,6 @@ define("MENU",
                     "name" => "Rótulos",
                     "icon" => "nav-pyrus__icon fas fa-tag",
                     "url" => \URL::to("root/labels"),
-                ], [
-                    "name" => "Imágenes",
-                    "icon" => "nav-pyrus__icon far fa-images",
-                    "url" => \URL::to('root/images')
                 ]
             ]
         ], [

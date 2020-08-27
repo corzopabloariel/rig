@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Help;
+use App\Parameter;
 use Illuminate\Http\Request;
 
-class HelpController extends Controller
+class ParameterController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -14,15 +14,14 @@ class HelpController extends Controller
      */
     public function index()
     {
-        $helps = Help::orderBy("code")->paginate(PAGINATE);
+        $parameters = Parameter::all();
 
         $data = [
             "view" => "element",
-            "url_search" => \Auth::user()->redirect() . "/helps",
-            "elements" => $helps,
-            "entity" => "help",
-            "placeholder" => "Código",
-            "section" => "Ayudas de campos"
+            "elements" => $parameters,
+            "entity" => "parameter",
+            "notPaginate" => 1,
+            "section" => "Parámetros"
         ];
         return view('home',compact('data'));
     }
@@ -45,51 +44,51 @@ class HelpController extends Controller
      */
     public function store(Request $request)
     {
-        return (new \App\Http\Controllers\Auth\BasicController)->store($request, null, new Help);
+        return (new \App\Http\Controllers\Auth\BasicController)->store($request, null, new Parameter);
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  \App\Help  $help
+     * @param  \App\Parameter  $parameter
      * @return \Illuminate\Http\Response
      */
-    public function show(Help $help)
+    public function show(Parameter $parameter)
     {
-        return $help;
+        return $parameter;
     }
 
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Help  $help
+     * @param  \App\Parameter  $parameter
      * @return \Illuminate\Http\Response
      */
-    public function edit(Help $help)
+    public function edit(Parameter $parameter)
     {
-        return $help;
+        return $parameter;
     }
 
     /**
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Help  $help
+     * @param  \App\Parameter  $parameter
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Help $help)
+    public function update(Request $request, Parameter $parameter)
     {
-        return (new \App\Http\Controllers\Auth\BasicController)->store($request, $help, new Help);
+        return (new \App\Http\Controllers\Auth\BasicController)->store($request, $parameter, new Parameter);
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Help  $help
+     * @param  \App\Parameter  $parameter
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Help $help)
+    public function destroy(Parameter $parameter)
     {
-        return (new \App\Http\Controllers\Auth\BasicController)->delete($help, (new Help)->getFillable());
+        return (new \App\Http\Controllers\Auth\BasicController)->delete($parameter, (new Parameter)->getFillable());
     }
 }

@@ -1,14 +1,21 @@
 <section class="my-3">
     <div class="container-fluid">
+        @isset($data["section"])
+            @include('layouts.general.breadcrumb', ['section' => $data["section"]])
+        @endisset
         @include('layouts.general.form', ['buttonADD' => 1, 'form' => 0, 'close' => 1, 'modal' => 1])
-        @include('layouts.general.table', [
-            "paginate" => $data["elements"],
-            "form" => [
+        @php
+        $arr = [];
+        if (isset($data["url_search"]))
+            $arr["form"] = [
                 "url" => $data["url_search"] ?? "/",
                 "placeholder" => "Buscar en " . ($data["placeholder"] ?? "No definido"),
                 "search" => isset($data["search"]) ? $data["search"] : null
-            ]
-        ])
+            ];
+        if (isset($data["elements"]) && !isset($data["notPaginate"]))
+            $arr["paginate"] = $data["elements"];
+        @endphp
+        @include('layouts.general.table', $arr)
     </div>
 </section>
 @push('js')

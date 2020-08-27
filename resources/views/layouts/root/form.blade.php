@@ -1,5 +1,8 @@
 <section class="my-3">
     <div class="container-fluid">
+        @isset($data["section"])
+            @include('layouts.general.breadcrumb', ['section' => $data["section"]])
+        @endisset
         <div class="p-5 bg-white mb-3">
             <h3 class="text-center">Formulario dinámico de la sección declaraciones</h3>
         </div>

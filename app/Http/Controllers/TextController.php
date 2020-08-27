@@ -21,7 +21,8 @@ class TextController extends Controller
             "url_search" => \Auth::user()->redirect() . "/texts",
             "elements" => $texts,
             "entity" => "text",
-            "placeholder" => "Código"
+            "placeholder" => "Código",
+            "section" => "Textos"
         ];
         return view('home',compact('data'));
     }

@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Help;
+use App\Image;
 use Illuminate\Http\Request;
 
-class HelpController extends Controller
+class ImageController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -14,15 +14,12 @@ class HelpController extends Controller
      */
     public function index()
     {
-        $helps = Help::orderBy("code")->paginate(PAGINATE);
-
         $data = [
             "view" => "element",
-            "url_search" => \Auth::user()->redirect() . "/helps",
-            "elements" => $helps,
-            "entity" => "help",
-            "placeholder" => "Código",
-            "section" => "Ayudas de campos"
+            "elements" => Image::all(),
+            "entity" => "image",
+            "notPaginate" => 1,
+            "section" => "Imágenes sueltas"
         ];
         return view('home',compact('data'));
     }
@@ -45,51 +42,51 @@ class HelpController extends Controller
      */
     public function store(Request $request)
     {
-        return (new \App\Http\Controllers\Auth\BasicController)->store($request, null, new Help);
+        return (new \App\Http\Controllers\Auth\BasicController)->store($request, null, new Image);
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  \App\Help  $help
+     * @param  \App\Image  $image
      * @return \Illuminate\Http\Response
      */
-    public function show(Help $help)
+    public function show(Image $image)
     {
-        return $help;
+        return $image;
     }
 
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Help  $help
+     * @param  \App\Image  $image
      * @return \Illuminate\Http\Response
      */
-    public function edit(Help $help)
+    public function edit(Image $image)
     {
-        return $help;
+        return $image;
     }
 
     /**
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Help  $help
+     * @param  \App\Image  $image
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Help $help)
+    public function update(Request $request, Image $image)
     {
-        return (new \App\Http\Controllers\Auth\BasicController)->store($request, $help, new Help);
+        return (new \App\Http\Controllers\Auth\BasicController)->store($request, $image, new Image);
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Help  $help
+     * @param  \App\Image  $image
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Help $help)
+    public function destroy(Image $image)
     {
-        return (new \App\Http\Controllers\Auth\BasicController)->delete($help, (new Help)->getFillable());
+        return (new \App\Http\Controllers\Auth\BasicController)->delete($image, (new Image)->getFillable());
     }
 }

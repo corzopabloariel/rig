@@ -8,7 +8,16 @@
                 <nav class="navbar justify-content-between w-100 navbar-expand-lg navbar-light p-0">
                     <div class="navbar__header">
                         <a href="{{ route(Auth::user()->redirect()) }}">
-                            <img src="{{ asset('images/rig-logo.png') }}" class="card__img" alt="RIG" srcset="">
+                            @php
+                            $img = asset('images/rig-logo.png');
+                            $rig = \App\Rig::first();
+                            if ($rig) {
+                                if (!empty($rig->images["logo"]))
+                                    $img = asset($rig["images"]["logo"]["i"]);
+                            }
+                            $img .= "?t=" . time();
+                            @endphp
+                            <img src="{{ $img }}" class="card__img" alt="RIG" srcset="">
                         </a>
                     </div>
                     <div class="collapse navbar-collapse bg-white" id="navbarNavDropdown">
@@ -19,6 +28,11 @@
                                 </a>
                                 <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuUsuario">
                                     <a class="dropdown-item" href=" route('usuarios.datos') }}"><i class="fas fa-database mr-2"></i>Mis Datos</a>
+                                    @if (Auth::user()->hasRole("root"))
+                                    <a class="dropdown-item" href="{{ route('images.index') }}"><i class="far fa-images mr-2"></i>Imágenes sueltas</a>
+                                    <a class="dropdown-item" href="{{ route('parameters.index') }}"><i class="fas fa-wrench mr-2"></i>Parámetros del sistema</a>
+                                    <a class="dropdown-item" href="{{ route('datos') }}"><i class="fas fa-briefcase mr-2"></i>Datos de RIG</a>
+                                    @endif
                                     <a class="dropdown-item" href="{{ route('logout') }}"><i class="fas text-danger fa-power-off mr-2"></i>Salir</a>
                                 </div>
                             </li>

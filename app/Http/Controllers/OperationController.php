@@ -21,7 +21,8 @@ class OperationController extends Controller
             "url_search" => \Auth::user()->redirect() . "/operations",
             "elements" => $operations,
             "entity" => "operation",
-            "placeholder" => "Nombre"
+            "placeholder" => "Nombre",
+            "section" => "Operaciones"
         ];
         return view('home',compact('data'));
     }

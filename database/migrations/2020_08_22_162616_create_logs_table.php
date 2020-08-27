@@ -19,7 +19,7 @@ class CreateLogsTable extends Migration
             $table->unsignedBigInteger('entity_id');
             $table->text('data')->nullable()->default(NULL);
             $table->unsignedBigInteger('user_id')->nullable()->default(NULL);
-            $table->enum('type', ['C', 'U', 'D', 'N']);//Create, Update, Delete, Notification
+            $table->enum('type', ['C', 'U', 'D', 'N', 'L']);//Create, Update, Delete, Notification, Login
             $table->softDeletes();
             $table->timestamps();
 

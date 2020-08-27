@@ -88,6 +88,20 @@ const ENTIDADES = {
         ],
     },
 
+    parameter: {
+        TABLE: "parameters",
+        ROUTE: "parameters",
+        ATRIBUTOS: {
+            type: {TIPO:"TP_ENUM",RULE: "required",VISIBILIDAD:"TP_VISIBLE",LABEL:1,ENUM:[{id: 'email:notice', text: "Email de avisos del sistema"}, {id: 'email:reply', text: "Email de respuesta"}, {id: 'email:statement', text: "Email de declaraciones"}, {id: 'paginate', text: "Paginado de las entidades"}],NOMBRE:"Tipo",CLASS:"form--input", NECESARIO: 1},
+            value: {TIPO:"TP_STRING",RULE: "required|max:150",MAXLENGTH:150,VISIBILIDAD:"TP_VISIBLE",LABEL:1,NOMBRE:"valor", NECESARIO: 1, NOTEDIT: 1}
+        },
+        FORM: [
+            {
+                '<div class="col-12 col-md-6">/type/</div><div class="col-12 col-md-6">/value/</div>' : ['value', 'type']
+            }
+        ]
+    },
+
     client: {
         TABLE: "users",
         ROUTE: "users",
@@ -126,6 +140,35 @@ const ENTIDADES = {
         FORM: [
             {
                 '<div class="col-12">/email/</div>' : ['email']
+            }
+        ]
+    },
+
+
+    empresa_images: {
+        TABLE: "empresa",
+        COLUMN: "images",
+        ONE: 1,
+        NOMBRE: "Imágenes",
+        ATRIBUTOS: {
+            logo: {TIPO:"TP_IMAGE", EXT: "jpeg, png, jpg, gif", FOLDER: "empresa/logos",RULE: "nullable|mimes:jpeg,png,jpg,gif|max:2048", VISIBILIDAD:"TP_VISIBLE",ACCEPT:"image/*",NOMBRE:"Logotipo",WIDTH:"800px", HEIGHT:"210px"},
+            favicon: {TIPO:"TP_IMAGE", EXT: "jpeg, png, jpg, gif, ico", FOLDER: "empresa/logos",RULE: "nullable|mimes:jpeg,png,jpg,gif,ico|max:2048", VISIBILIDAD:"TP_VISIBLE",ACCEPT:"image/x-icon,image/png",NOMBRE:"favicon",WIDTH:"50px",HEIGHT:"50px"},
+        },
+        FORM: [
+            {
+                '<div class="col-12 col-md-8">/logo/</div><div class="col-12 col-md-4">/favicon/</div>' : ['logo','favicon']
+            }
+        ]
+    },
+    image: {
+        TABLE: "images",
+        ROUTE: "images",
+        ATRIBUTOS: {
+            data: {TIPO:"TP_IMAGE",FOLDER:"miscellaneous", EXT: "jpeg, png, jpg, gif",RULE: "required|image|mimes:jpeg,png,jpg,gif|max:2048",NECESARIO:1,VISIBILIDAD:"TP_VISIBLE",ACCEPT:"image/*",NOMBRE:"imagen"},
+        },
+        FORM: [
+            {
+                '<div class="col-12 col-md-8">/data/</div>' : ['data']
             }
         ]
     },

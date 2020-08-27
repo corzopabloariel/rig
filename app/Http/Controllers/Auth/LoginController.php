@@ -46,22 +46,17 @@ class LoginController extends Controller
         $email = \App\Email::where("email", $request->email)->first();
         if ($email) {// $this->guard()->validate($this->credentials($request))
             $requestData["id"] = $email->user_id;
-            if (Auth::attempt($requestData))
+            if (Auth::attempt($requestData)) {
+                (new \App\Log)->create("users", Auth::user()->id, "LOGIN OK", Auth::user()->id, "L");
                 return redirect(Auth::user()->redirect());
-            else
+            } else {
+                (new \App\Log)->create("users", $email->user_id, "LOGIN ERR", $email->user_id, "L");
                 return back()->withErrors(['mssg' => "Datos de {$request->email} incorrectos"])->withInput();
+            }
         } else {
             $this->incrementLoginAttempts($request);
             return back()->withErrors(['mssg' => "Datos de {$request->email} no encontrados"])->withInput();
         }
-            /*    Auth::user()->fill(["login" => date("c")]);
-                Auth::user()->save();
-                return redirect( $this->redirectTo );
-            } else {
-                $this->incrementLoginAttempts($request);
-                return back()->withErrors(['mssg' => "Datos de {$request->username} no encontrados"]);
-            }
-        }*/
     }
 
     /**

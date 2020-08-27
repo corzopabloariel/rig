@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateTextsTable extends Migration
+class CreateParametersTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,11 +13,10 @@ class CreateTextsTable extends Migration
      */
     public function up()
     {
-        Schema::create('texts', function (Blueprint $table) {
+        Schema::create('parameters', function (Blueprint $table) {
             $table->id();
-            $table->string('code', 30);//Genera automática
-            $table->text('data')->nullable()->default(NULL);
-            $table->softDeletes();
+            $table->enum('type', ['email:notice', 'email:reply', 'email:statement', 'paginate'])->unique();
+            $table->string('value', 150);
             $table->timestamps();
         });
     }
@@ -29,6 +28,6 @@ class CreateTextsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('texts');
+        Schema::dropIfExists('parameters');
     }
 }

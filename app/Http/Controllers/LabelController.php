@@ -21,7 +21,8 @@ class LabelController extends Controller
             "url_search" => \Auth::user()->redirect() . "/labels",
             "elements" => $labels,
             "entity" => "label",
-            "placeholder" => "Código"
+            "placeholder" => "Código",
+            "section" => "Etiquetas"
         ];
         return view('home',compact('data'));
     }

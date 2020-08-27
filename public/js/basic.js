@@ -21,6 +21,7 @@ const sourceAxios = axios.CancelToken.source();
 const url_simple = document.querySelector('meta[name="public-path"]').content;
 const entity = document.querySelector('meta[name="entity"]').content;
 const url_basic = document.querySelector('meta[name="url"]').content + "/";
+const src = `${url_simple}images/no-img.jpg`;
 function* fibo() {
     let a = 1;
     let b = 1;

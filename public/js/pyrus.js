@@ -65,7 +65,7 @@ class Connect {
             .catch(err => callbackFail.call(this, err));
     }
 
-    static 
+    //static 
 }
 class Pyrus {
 	entidad = null;
