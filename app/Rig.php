@@ -9,11 +9,13 @@ class Rig extends Model
     protected $table = "rig";
     protected $fillable = [
         'images',
-        'text'
+        'text',
+        'captcha'
     ];
 
     protected $casts = [
         'images' => 'array',
-        'text' => 'array'
+        'text' => 'array',
+        'captcha' => 'array'
     ];
 }

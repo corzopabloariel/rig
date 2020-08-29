@@ -27,7 +27,7 @@
                                     {{Auth::user()->fullname()}}
                                 </a>
                                 <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuUsuario">
-                                    <a class="dropdown-item" href=" route('usuarios.datos') }}"><i class="fas fa-database mr-2"></i>Mis Datos</a>
+                                    <a class="dropdown-item" href="{{ route('user.datos') }}"><i class="fas fa-database mr-2"></i>Mis Datos</a>
                                     @if (Auth::user()->hasRole("root"))
                                     <a class="dropdown-item" href="{{ route('images.index') }}"><i class="far fa-images mr-2"></i>Imágenes sueltas</a>
                                     <a class="dropdown-item" href="{{ route('parameters.index') }}"><i class="fas fa-wrench mr-2"></i>Parámetros del sistema</a>

@@ -1,4 +1,10 @@
 <?php
+function param($type, $default = null) {
+    $data = \App\Parameter::where("type", $type)->first();
+    if ($data)
+        return $data->value;
+    return $default;
+}
 /**
  * @param $code
  */

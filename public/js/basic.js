@@ -18,6 +18,7 @@ window.axios.defaults.headers.common = {
     'X-CSRF-TOKEN' : document.querySelector('meta[name="csrf-token"]').getAttribute('content')
 };
 const sourceAxios = axios.CancelToken.source();
+const publicKey = document.querySelector('meta[name="public-key"]').content;
 const url_simple = document.querySelector('meta[name="public-path"]').content;
 const entity = document.querySelector('meta[name="entity"]').content;
 const url_basic = document.querySelector('meta[name="url"]').content + "/";

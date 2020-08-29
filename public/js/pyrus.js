@@ -1115,6 +1115,7 @@ class Pyrus {
         aviso.appendChild(aviso_input);
         aviso.innerHTML += `<input name="${Arr.checkNameElementForm}" value="0" type="hidden"/><div>¿Mantener nombre del archivo?</div>`;
         image.id = `${Arr.idElementForm}_image`;
+        console.log(Arr.nameElementForm)
         element.id = Arr.idElementForm;
         element.name = Arr.nameElementForm;
         element.setAttribute("onchange", `readURL(this, '${Arr.idElementForm}_image')`);

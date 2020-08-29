@@ -37,3 +37,7 @@
     </div>
 </div>
 @endsection
+@push("js")
+<script src="https://www.google.com/recaptcha/api.js?render={{$publicKey}}"></script>
+<script src="{{ asset('js/access.js') }}"></script>
+@endpush

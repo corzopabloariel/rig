@@ -144,7 +144,20 @@ const ENTIDADES = {
         ]
     },
 
-
+    empresa_captcha: {
+        ONE: 1,
+        NOMBRE: "Google",
+        COLUMN: "captcha",
+        ATRIBUTOS: {
+            public: {TIPO:"TP_STRING", RULE: "required", NECESARIO: 1,LABEL: 1,VISIBILIDAD:"TP_VISIBLE",NOMBRE:"clave pública"},
+            private: {TIPO:"TP_STRING", RULE: "required", NECESARIO: 1,LABEL: 1,VISIBILIDAD:"TP_VISIBLE",NOMBRE:"clave secreta"}
+        },
+        FORM: [
+            {
+                '<div class="col-12 col-md">/public/</div><div class="col-12 col-md">/private/</div>' : ['public','private']
+            }
+        ]
+    },
     empresa_images: {
         TABLE: "empresa",
         COLUMN: "images",

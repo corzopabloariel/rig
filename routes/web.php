@@ -16,6 +16,7 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function () {
     return view('access');
 });
+Route::post('/', ['uses' => 'FormController@access', 'as' => 'access.post']);
 
 Auth::routes();
 Route::get('logout', ['uses' => 'Auth\LoginController@logout' , 'as' => 'logout']);
@@ -54,7 +55,7 @@ Route::group(['middleware' => ['auth', 'role:root'], 'prefix' => 'root'], functi
     Route::post('users', ['uses' => 'UserController@store', 'as' => 'users.store']);
     Route::post('users/{user}', ['uses' => 'UserController@update', 'as' => 'users.update']);
     Route::delete('users/{user}', ['uses' => 'UserController@destroy', 'as' => 'users.destroy']);
-
+    Route::get('mis-datos', ['uses' => 'UserController@datos', 'as' => 'user.datos']);
     /**
      * Helps
      */

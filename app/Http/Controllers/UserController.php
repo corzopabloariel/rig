@@ -50,9 +50,16 @@ class UserController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function datos()
     {
-        //
+        $user = \Auth::user();
+        $user["emails"] = $user->emails;
+        $data = [
+            "element" => $user,
+            "view" => "element.user",
+            "entity" => "user"
+        ];
+        return view('home',compact('data'));
     }
 
     /**
@@ -64,6 +71,7 @@ class UserController extends Controller
     public function store(Request $request)
     {
         $data = (new \App\Http\Controllers\Auth\BasicController)->store($request, null, new User, null, true);
+        (new \App\Log)->create("users", $user->id, "Nuevo registro", Auth::user()->id, "C");
         try {
             $data = json_decode($data, true);
             $emails = $data["data"]["emails"];
@@ -115,6 +123,8 @@ class UserController extends Controller
     public function update(Request $request, User $user)
     {
         $data = (new \App\Http\Controllers\Auth\BasicController)->store($request, $user, new User, null, true);
+        (new \App\Log)->create("users", $user->id, "Modificación del registro", Auth::user()->id, "U");
+        \DB::beginTransaction();
         try {
             $data = json_decode($data, true);
             $emails = $data["data"]["emails"];
@@ -131,8 +141,10 @@ class UserController extends Controller
                 }
             }
         } catch (\Throwable $th) {
+            \DB::rollback();
             return json_encode(["error" => 1, "msg" => $th->errorInfo[2]]);
         }
+        \DB::commit();
         return json_encode(["success" => true, "error" => 0, "data" => $data["data"]]);
     }
 
@@ -144,6 +156,7 @@ class UserController extends Controller
      */
     public function destroy(User $user)
     {
-        //
+        (new \App\Log)->create("users", $user->id, "Baja del registro", Auth::user()->id, "D");
+        return (new \App\Http\Controllers\Auth\BasicController)->delete($label, (new Label)->getFillable());
     }
 }

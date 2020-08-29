@@ -45,7 +45,10 @@ class OperationController extends Controller
      */
     public function store(Request $request)
     {
-        return (new \App\Http\Controllers\Auth\BasicController)->store($request, null, new Operation, null, false, ["code" => (new Operation)->generateCode()]);
+        $data = (new \App\Http\Controllers\Auth\BasicController)->store($request, null, new Operation, null, false, ["code" => (new Operation)->generateCode()]);
+        $aux = json_decode($data, true);
+        (new \App\Log)->create("operations", $aux["data"]["id"], "Nuevo registro", Auth::user()->id, "C");
+        return $data;
     }
 
     /**
@@ -79,6 +82,7 @@ class OperationController extends Controller
      */
     public function update(Request $request, Operation $operation)
     {
+        (new \App\Log)->create("operations", $operation->id, "Modificación del registro", Auth::user()->id, "U");
         return (new \App\Http\Controllers\Auth\BasicController)->store($request, $operation, new Operation);
     }
 
@@ -90,6 +94,7 @@ class OperationController extends Controller
      */
     public function destroy(Operation $operation)
     {
+        (new \App\Log)->create("operations", $operation->id, "Baja del registro", Auth::user()->id, "D");
         return (new \App\Http\Controllers\Auth\BasicController)->delete($operation, (new Operation)->getFillable());
     }
 }

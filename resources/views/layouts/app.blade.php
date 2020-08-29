@@ -1,11 +1,12 @@
 <!doctype html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+<html lang="es">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
+    <meta name="public-key" content="{{ $publicKey }}">
     <meta name="public-path" content="{{ asset('/') }}">
     <meta name="public" content="{{ url()->current() }}">
     <meta name="entity" content="{{ $data['entity'] ?? '' }}">

@@ -1,6 +1,5 @@
 <?php
-$data = \App\Parameter::where("type", "paginate")->first();
-define("PAGINATE", $data ? $data->value : 15);
+define("PAGINATE", param("paginate", 15));
 
 define("MENU",
     [
@@ -31,7 +30,7 @@ define("MENU",
             "id" => "declaraciones",
             "name" => "Declaraciones",
             "icon" => "nav-pyrus__icon fas fa-spell-check",
-            "url" => \URL::to("root/declaraciones")
+            "url" => \URL::to("root/statements")
         ], [
             "id" => "textos",
             "name" => "Textos",
@@ -64,7 +63,7 @@ define("MENU_ADM",
             "id" => "declaraciones",
             "name" => "Declaraciones",
             "icon" => "nav-pyrus__icon fas fa-spell-check",
-            "url" => \URL::to("root/declaraciones")
+            "url" => \URL::to("root/statements")
         ]
     ]
 );

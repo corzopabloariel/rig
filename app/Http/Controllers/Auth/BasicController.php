@@ -145,6 +145,7 @@ class BasicController extends Controller
     }
 
     public function delete($data, $fillable, $total = 0) {
+        DB::beginTransaction();
         try {
             if (in_array("image", $fillable)) {
                 if(!empty($data->image)) {
@@ -172,8 +173,10 @@ class BasicController extends Controller
             else
                 $data->delete();
         } catch (\Throwable $th) {
+            DB::rollback();
             return json_encode(["error" => 1, "msg" => $th->errorInfo[2]]);
         }
+        DB::commit();
         return json_encode(['success' => true, "error" => 0]);
     }
     /**
@@ -189,85 +192,85 @@ class BasicController extends Controller
     public function TP_STRING($attr, $value, $valueNew, $specification, $index = 0) {
         return self::clear($valueNew);
     }
-    public function TP_STRING_value($value) {
-        return $value;
+    public function TP_STRING_value(...$value) {
+        return $value[0];
     }
     public function TP_EMAIL($attr, $value, $valueNew, $specification, $index = 0) {
         return trim($valueNew);
     }
-    public function TP_EMAIL_value($value) {
-        return $value;
+    public function TP_EMAIL_value(...$value) {
+        return $value[0];
     }
     public function TP_PASSWORD($attr, $value, $valueNew, $specification, $index = 0) {
         return empty($valueNew) ? $value : Hash::make($valueNew);
     }
-    public function TP_PASSWORD_value($value) {
-        return $value;
+    public function TP_PASSWORD_value(...$value) {
+        return $value[0];
     }
     public function TP_RELATIONSHIP($attr, $value, $valueNew, $specification, $index = 0) {
         return empty($valueNew) ? null : $valueNew;
     }
-    public function TP_RELATIONSHIP_value($value) {
-        return $value;
+    public function TP_RELATIONSHIP_value(...$value) {
+        return $value[0];
     }
     public function TP_ENUM($attr, $value, $valueNew, $specification, $index = 0) {
         return $valueNew;
     }
-    public function TP_ENUM_value($value) {
-        return $value;
+    public function TP_ENUM_value(...$value) {
+        return $value[0];
     }
     public function TP_FECHA($attr, $value, $valueNew, $specification, $index = 0) {
         return $valueNew;
     }
-    public function TP_FECHA_value($value) {
-        return $value;
+    public function TP_FECHA_value(...$value) {
+        return $value[0];
     }
     public function TP_LINK($attr, $value, $valueNew, $specification, $index = 0) {
         return $valueNew;
     }
-    public function TP_LINK_value($value) {
-        return $value;
+    public function TP_LINK_value(...$value) {
+        return $value[0];
     }
     public function TP_TEXT($attr, $value, $valueNew, $specification, $index = 0) {
         return self::clear($valueNew);
     }
-    public function TP_TEXT_value($value) {
-        return $value;
+    public function TP_TEXT_value(...$value) {
+        return $value[0];
     }
     public function TP_ENTERO($attr, $value, $valueNew, $specification, $index = 0) {
         return $valueNew;
     }
-    public function TP_ENTERO_value($value) {
-        return $value;
+    public function TP_ENTERO_value(...$value) {
+        return $value[0];
     }
     public function TP_LIST($attr, $value, $valueNew, $specification, $index = 0) {
         return self::clear($valueNew);
     }
-    public function TP_LIST_value($value) {
-        return $value;
+    public function TP_LIST_value(...$value) {
+        return $value[0];
     }
     public function TP_PHONE($attr, $value, $valueNew, $specification, $index = 0) {
         return $valueNew;
     }
-    public function TP_PHONE_value($value) {
-        return $value;
+    public function TP_PHONE_value(...$value) {
+        return $value[0];
     }
     public function TP_CHECK($attr, $value, $valueNew, $specification, $index = 0) {
         return $valueNew;
     }
-    public function TP_CHECK_value($value) {
-        return $value;
+    public function TP_CHECK_value(...$value) {
+        return $value[0];
     }
     public function TP_COLOR($attr, $value, $valueNew, $specification, $index = 0) {
         return $valueNew;
     }
-    public function TP_COLOR_value($value) {
-        return $value;
+    public function TP_COLOR_value(...$value) {
+        return $value[0];
     }
     public function TP_SLUG($attr, $value, $valueNew, $specification, $index = 0) {
         return Str::slug($valueNew, "-");
     }
-    public function TP_SLUG_value($value) {
+    public function TP_SLUG_value(...$value) {
         return Str::slug($value, "-");
     }
     public function TP_IMAGE($attr, $value, $valueNew, $specification, $index = 0) {
@@ -304,8 +307,8 @@ class BasicController extends Controller
         }
         return $value;
     }
-    public function TP_IMAGE_value($value) {
-        return isset($value["image"]) ? $value["image"] : null;
+    public function TP_IMAGE_value(...$value) {
+        return isset($value[0][$value[1]]) ? $value[0][$value[1]] : null;
     }
     public function object($request, $data = null) {
         $datosRequest = $request->all();
@@ -425,7 +428,7 @@ class BasicController extends Controller
                         if ($type != "TP_ARRAY") {
                             if (isset($aux[$table][$specification])) {
                                 $value = $aux[$table][$specification];
-                                $values[$specification] = call_user_func_array("self::{$type}_value", [$value]);
+                                $values[$specification] = call_user_func_array("self::{$type}_value", [$value, $specification]);
                             }
                         }
                     }
@@ -436,7 +439,7 @@ class BasicController extends Controller
                         if ($type != "TP_ARRAY") {
                             if (isset($aux[$table][$specification][$element["COLUMN"]])) {
                                 $value = $aux[$table][$specification][$element["COLUMN"]];
-                                $values[$specification] = call_user_func_array("self::{$type}_value", [$value]);
+                                $values[$specification] = call_user_func_array("self::{$type}_value", [$value, $specification]);
                             }
                         }
                     }
@@ -478,6 +481,7 @@ class BasicController extends Controller
         if ($flag)
             return json_encode(["error" => 1, "msg" => "Error en los datos de ingreso."]);
         else {
+            DB::beginTransaction();
             try {
                 $OBJ = self::object($request, $data);
                 if ($rule) {
@@ -501,8 +505,10 @@ class BasicController extends Controller
                             $OBJ[$k] = $v;
                     }
                 }
-                if ($return)
+                if ($return) {
+                    DB::commit();
                     return json_encode(["success" => true, "error" => 0, "data" => $OBJ]);
+                }
                 if(is_null($data))
                     $data = $model->create($OBJ);
                 else {
@@ -510,13 +516,16 @@ class BasicController extends Controller
                     $data->save();
                 }
             } catch (\Throwable $th) {
+                DB::rollback();
                 return json_encode(["error" => 1, "msg" => $th->errorInfo[2]]);
             }
+            DB::commit();
             return json_encode(["success" => true, "error" => 0, "data" => $data]);
         }
     }
 
     public function edit (Request $request) {
+        DB::beginTransaction();
         try {
             if (isset($request->ATRIBUTOS)) {
                 $OBJ = [];
@@ -544,8 +553,10 @@ class BasicController extends Controller
                     ->update($data);
             }
         } catch (\Throwable $th) {
+            DB::rollback();
             return json_encode(["error" => 1, "msg" => $th->errorInfo[2]]);
         }
+        DB::commit();
         return json_encode(['success' => true, "error" => 0]);
     }
 

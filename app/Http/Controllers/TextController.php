@@ -45,7 +45,10 @@ class TextController extends Controller
      */
     public function store(Request $request)
     {
-        return (new \App\Http\Controllers\Auth\BasicController)->store($request, null, new Text);
+        $data = (new \App\Http\Controllers\Auth\BasicController)->store($request, null, new Text);
+        $aux = json_decode($data, true);
+        (new \App\Log)->create("texts", $aux["data"]["id"], "Nuevo registro", Auth::user()->id, "C");
+        return $data;
     }
 
     /**
@@ -79,6 +82,7 @@ class TextController extends Controller
      */
     public function update(Request $request, Text $text)
     {
+        (new \App\Log)->create("texts", $text->id, "Modificación del registro", Auth::user()->id, "U");
         return (new \App\Http\Controllers\Auth\BasicController)->store($request, $text, new Text);
     }
 
@@ -90,6 +94,7 @@ class TextController extends Controller
      */
     public function destroy(Text $text)
     {
+        (new \App\Log)->create("texts", $operation->id, "Baja del registro", Auth::user()->id, "D");
         return (new \App\Http\Controllers\Auth\BasicController)->delete($label, (new Label)->getFillable());
     }
 }

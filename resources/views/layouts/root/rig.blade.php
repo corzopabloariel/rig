@@ -22,6 +22,7 @@
     window.data = @json($data["elements"]);
     window.formAction = "UPDATE";
     window.pyrus = [];
+    window.pyrus.push({entidad: new Pyrus("empresa_captcha"), tipo: "U", column: "captcha"});
     window.pyrus.push({entidad: new Pyrus("empresa_images"), tipo: "U", column: "images"});
 
     searchTypeElements = t => {
