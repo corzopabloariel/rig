@@ -1,16 +1,28 @@
-enviar = t => {
-    let url = t.action;
-    let method = t.method;
-    let idForm = t.id;
+const Toast = Swal.mixin({
+    toast: true,
+    position: 'top-end',
+    showConfirmButton: false,
+    timer: 3000,
+    timerProgressBar: true,
+    onOpen: (toast) => {
+        toast.addEventListener('mouseenter', Swal.stopTimer)
+        toast.addEventListener('mouseleave', Swal.resumeTimer)
+    }
+});
+function enviar(evt) {
+    evt.preventDefault();
+    let url = this.action;
+    let method = this.method;
+    let idForm = this.id;
     let formElement = document.getElementById(idForm);
-    let formData = new FormData(formElement);
+    let formData = new FormData(this);
     grecaptcha.ready(function() {
         $( ".form-control" ).prop( "readonly" , true );
         Toast.fire({
             icon: 'warning',
             title: 'Espere, enviando'
         });
-        grecaptcha.execute(publicKey, {action: 'contact'}).then( function( token ) {
+        grecaptcha.execute(document.querySelector('meta[name="public-key"]').content, {action: 'contact'}).then( function( token ) {
             formData.append( "token", token );
             axios({
                 method: method,
@@ -20,13 +32,9 @@ enviar = t => {
                 config: { headers: {'Content-Type': 'multipart/form-data' }}
             })
             .then((res) => {
-                $( ".form-control" ).prop( "readonly" , false );
-                if( parseInt( res.data.estado ) ) {
-                    $( ".form-control" ).val( "" );
-                    Toast.fire({
-                        icon: 'success',
-                        title: res.data.mssg
-                    });
+                $(".form-control").prop("readonly", false);
+                if (!parseInt(res.data.error)) {
+                    document.querySelector("#card-access").innerHTML = res.data.txt;
                 } else
                     Toast.fire({
                         icon: 'error',
@@ -43,3 +51,9 @@ enviar = t => {
         });
     });
 };
+
+document.addEventListener("DOMContentLoaded", function(event) {
+    const form = document.querySelector("#form");
+
+    form.addEventListener("submit", enviar);
+});

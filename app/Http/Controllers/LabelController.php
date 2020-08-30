@@ -12,18 +12,23 @@ class LabelController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        $labels = Label::orderBy("code")->paginate(PAGINATE);
+        if (isset($request->search))
+            $labels = Label::where("code", "LIKE", "%{$request->search}%")->orderBy("code")->paginate(PAGINATE);
+        else
+            $labels = Label::orderBy("code")->paginate(PAGINATE);
 
         $data = [
             "view" => "element",
-            "url_search" => \Auth::user()->redirect() . "/labels",
+            "url_search" => \URL::to(\Auth::user()->redirect() . "/labels"),
             "elements" => $labels,
             "entity" => "label",
             "placeholder" => "Código",
             "section" => "Etiquetas"
         ];
+        if (isset($request->search))
+            $data["search"] = $request->search;
         return view('home',compact('data'));
     }
 

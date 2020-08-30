@@ -12,18 +12,23 @@ class HelpController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        $helps = Help::orderBy("code")->paginate(PAGINATE);
+        if (isset($request->search))
+            $helps = Help::where("code", "LIKE", "%{$request->search}%")->orderBy("code")->paginate(PAGINATE);
+        else
+            $helps = Help::orderBy("code")->paginate(PAGINATE);
 
         $data = [
             "view" => "element",
-            "url_search" => \Auth::user()->redirect() . "/helps",
+            "url_search" => \URL::to(\Auth::user()->redirect() . "/helps"),
             "elements" => $helps,
             "entity" => "help",
             "placeholder" => "Código",
             "section" => "Ayudas de campos"
         ];
+        if (isset($request->search))
+            $data["search"] = $request->search;
         return view('home',compact('data'));
     }
 

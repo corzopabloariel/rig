@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        img {
+            width: 250px;
+            display: inline-block;
+        }
+        .header {
+            background: #f7f7f7;
+            padding: 1.2em;
+            text-align: center;
+            border-bottom: 1px solid #dadada;
+            margin-bottom: 2em
+        }
+        .section {
+            margin: auto;
+            max-width: 100%;
+            width: 400px;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <img src="{{$logo}}" alt="RIG" srcset="">
+    </div>
+    <div class="section">{!! $txt !!}</div>
+</body>
+</html>

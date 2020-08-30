@@ -12,18 +12,23 @@ class OperationController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        $operations = Operation::orderBy("name")->paginate(PAGINATE);
+        if (isset($request->search))
+            $operations = Operation::where("name", "LIKE", "%{$request->search}%")->orderBy("name")->paginate(PAGINATE);
+        else
+            $operations = Operation::orderBy("name")->paginate(PAGINATE);
 
         $data = [
             "view" => "element",
-            "url_search" => \Auth::user()->redirect() . "/operations",
+            "url_search" => \URL::to(\Auth::user()->redirect() . "/operations"),
             "elements" => $operations,
             "entity" => "operation",
             "placeholder" => "Nombre",
             "section" => "Operaciones"
         ];
+        if (isset($request->search))
+            $data["search"] = $request->search;
         return view('home',compact('data'));
     }
 
@@ -47,7 +52,7 @@ class OperationController extends Controller
     {
         $data = (new \App\Http\Controllers\Auth\BasicController)->store($request, null, new Operation, null, false, ["code" => (new Operation)->generateCode()]);
         $aux = json_decode($data, true);
-        (new \App\Log)->create("operations", $aux["data"]["id"], "Nuevo registro", Auth::user()->id, "C");
+        (new \App\Log)->create("operations", $aux["data"]["id"], "Nuevo registro", \Auth::user()->id, "C");
         return $data;
     }
 
@@ -82,7 +87,7 @@ class OperationController extends Controller
      */
     public function update(Request $request, Operation $operation)
     {
-        (new \App\Log)->create("operations", $operation->id, "Modificación del registro", Auth::user()->id, "U");
+        (new \App\Log)->create("operations", $operation->id, "Modificación del registro", \Auth::user()->id, "U");
         return (new \App\Http\Controllers\Auth\BasicController)->store($request, $operation, new Operation);
     }
 
@@ -94,7 +99,7 @@ class OperationController extends Controller
      */
     public function destroy(Operation $operation)
     {
-        (new \App\Log)->create("operations", $operation->id, "Baja del registro", Auth::user()->id, "D");
+        (new \App\Log)->create("operations", $operation->id, "Baja del registro", \Auth::user()->id, "D");
         return (new \App\Http\Controllers\Auth\BasicController)->delete($operation, (new Operation)->getFillable());
     }
 }

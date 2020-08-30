@@ -16,9 +16,9 @@ class ClientMail extends Mailable
      *
      * @return void
      */
-    public function __construct()
+    public function __construct($data)
     {
-        //
+        $this->data = $data;
     }
 
     /**
@@ -28,6 +28,9 @@ class ClientMail extends Mailable
      */
     public function build()
     {
-        return $this->view('view.name');
+        $mail = $this
+            ->subject($this->data["subject"])->view('email.client')
+            ->with($this->data);
+        return $mail;
     }
 }

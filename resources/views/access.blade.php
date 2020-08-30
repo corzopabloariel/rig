@@ -19,12 +19,12 @@
                         <img src="{{ $img }}" class="card__img" alt="RIG" srcset="">
                     </div>
                     <div class="card-body">
-                        <div class="py-5">
+                        <div class="py-5" id=card-access>
                             {!! textPrint("TXT.LOGIN") !!}
-                            <form action="" method="post">
+                            <form action="" method="post" id=form>
                                 @csrf
                                 <div class="form-group">
-                                    <input type="email" class="form-control" id="email" aria-describedby="emailHelp" aria-label="{{ labelElement('LBL.EMAIL.LOGIN') }}" placeholder="{{ labelElement('LBL.EMAIL.LOGIN') }}">
+                                    <input type="email" class="form-control" id="email" name="email" aria-describedby="emailHelp" aria-label="{{ labelElement('LBL.EMAIL.LOGIN') }}" placeholder="{{ labelElement('LBL.EMAIL.LOGIN') }}">
                                     {!! helpTag("INP.EMAIL.LOGIN") !!}
                                 </div>
                                 <button class="btn btn-block btn-dark text-center" type="submit">Enviar</button>
@@ -39,5 +39,6 @@
 @endsection
 @push("js")
 <script src="https://www.google.com/recaptcha/api.js?render={{$publicKey}}"></script>
+<script src="{{ asset('js/axios.min.js') }}"></script>
 <script src="{{ asset('js/access.js') }}"></script>
 @endpush

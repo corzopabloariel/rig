@@ -14,15 +14,26 @@ class UserController extends Controller
      */
     public function index(Request $request)
     {
-        $users = User::where("id", "!=", \Auth::user()->id)->where("profile", "NOT LIKE", "user")->orderBy("profile")->orderBy("comitente")->paginate(PAGINATE);
+        if (isset($request->search)) {
+            $s = $request->search;
+            $users = User::where("id", "!=", \Auth::user()->id)->where("profile", "NOT LIKE", "user")
+                ->whereRaw("CONCAT_WS(' ', `name`, `lastname`) LIKE '%{$request->search}%'")
+                ->orWhereHas('emails', function ($query) use ($s) {
+                    $query->where('email', 'LIKE', "%{$s}%");
+                })->where("id", "!=", \Auth::user()->id)->where("profile", "NOT LIKE", "user")
+                ->orderBy("profile")->orderBy("comitente")->paginate(PAGINATE);
+        } else
+            $users = User::where("id", "!=", \Auth::user()->id)->where("profile", "NOT LIKE", "user")->orderBy("profile")->orderBy("comitente")->paginate(PAGINATE);
         $data = [
             "view" => "element.users",
-            "url_search" => \Auth::user()->redirect() . "/users",
+            "url_search" => \URL::to(\Auth::user()->redirect() . "/users"),
             "elements" => $users,
             "entity" => "user",
             "placeholder" => "Nombre completo o Email",
             "section" => "Usuarios"
         ];
+        if (isset($request->search))
+            $data["search"] = $request->search;
         return view('home',compact('data'));
     }
     /**
@@ -32,16 +43,27 @@ class UserController extends Controller
      */
     public function clients(Request $request)
     {
-        $users = User::where("id", "!=", \Auth::user()->id)->where("profile", "LIKE", "user")->orderBy("comitente")->paginate(PAGINATE);
+        if (isset($request->search)) {
+            $s = $request->search;
+            $users = User::where("profile", "LIKE", "user")
+                ->whereRaw("CONCAT_WS(' ', `name`, `lastname`, `comitente`) LIKE '%{$request->search}%'")
+                ->orWhereHas('emails', function ($query) use ($s) {
+                    $query->where('email', 'LIKE', "%{$s}%");
+                })->where("profile", "LIKE", "user")
+                ->orderBy("profile")->orderBy("comitente")->paginate(PAGINATE);
+        } else
+            $users = User::where("profile", "LIKE", "user")->orderBy("comitente")->paginate(PAGINATE);
         $data = [
             "view" => "element.users",
-            "url_search" => \Auth::user()->redirect() . "/clients",
+            "url_search" => \URL::to(\Auth::user()->redirect() . "/clients"),
             "elements" => $users,
             "entity" => "client",
             "notForm" => 1,
             "placeholder" => "Nombre completo, comitente o Email",
             "section" => "Clientes"
         ];
+        if (isset($request->search))
+            $data["search"] = $request->search;
         return view('home',compact('data'));
     }
 
@@ -71,7 +93,7 @@ class UserController extends Controller
     public function store(Request $request)
     {
         $data = (new \App\Http\Controllers\Auth\BasicController)->store($request, null, new User, null, true);
-        (new \App\Log)->create("users", $user->id, "Nuevo registro", Auth::user()->id, "C");
+        (new \App\Log)->create("users", $user->id, "Nuevo registro", \Auth::user()->id, "C");
         try {
             $data = json_decode($data, true);
             $emails = $data["data"]["emails"];
@@ -123,7 +145,7 @@ class UserController extends Controller
     public function update(Request $request, User $user)
     {
         $data = (new \App\Http\Controllers\Auth\BasicController)->store($request, $user, new User, null, true);
-        (new \App\Log)->create("users", $user->id, "Modificación del registro", Auth::user()->id, "U");
+        (new \App\Log)->create("users", $user->id, "Modificación del registro", \Auth::user()->id, "U");
         \DB::beginTransaction();
         try {
             $data = json_decode($data, true);
@@ -156,7 +178,7 @@ class UserController extends Controller
      */
     public function destroy(User $user)
     {
-        (new \App\Log)->create("users", $user->id, "Baja del registro", Auth::user()->id, "D");
+        (new \App\Log)->create("users", $user->id, "Baja del registro", \Auth::user()->id, "D");
         return (new \App\Http\Controllers\Auth\BasicController)->delete($label, (new Label)->getFillable());
     }
 }

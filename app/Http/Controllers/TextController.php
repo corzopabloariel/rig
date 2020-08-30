@@ -12,18 +12,23 @@ class TextController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        $texts = Text::orderBy("code")->paginate(PAGINATE);
+        if (isset($request->search))
+            $texts = Text::where("code", "LIKE", "%{$request->search}%")->orderBy("code")->paginate(PAGINATE);
+        else
+            $texts = Text::orderBy("code")->paginate(PAGINATE);
 
         $data = [
             "view" => "element",
-            "url_search" => \Auth::user()->redirect() . "/texts",
+            "url_search" => \URL::to(\Auth::user()->redirect() . "/texts"),
             "elements" => $texts,
             "entity" => "text",
             "placeholder" => "Código",
             "section" => "Textos"
         ];
+        if (isset($request->search))
+            $data["search"] = $request->search;
         return view('home',compact('data'));
     }
 
@@ -47,7 +52,7 @@ class TextController extends Controller
     {
         $data = (new \App\Http\Controllers\Auth\BasicController)->store($request, null, new Text);
         $aux = json_decode($data, true);
-        (new \App\Log)->create("texts", $aux["data"]["id"], "Nuevo registro", Auth::user()->id, "C");
+        (new \App\Log)->create("texts", $aux["data"]["id"], "Nuevo registro", \Auth::user()->id, "C");
         return $data;
     }
 
@@ -82,7 +87,7 @@ class TextController extends Controller
      */
     public function update(Request $request, Text $text)
     {
-        (new \App\Log)->create("texts", $text->id, "Modificación del registro", Auth::user()->id, "U");
+        (new \App\Log)->create("texts", $text->id, "Modificación del registro", \Auth::user()->id, "U");
         return (new \App\Http\Controllers\Auth\BasicController)->store($request, $text, new Text);
     }
 
@@ -94,7 +99,7 @@ class TextController extends Controller
      */
     public function destroy(Text $text)
     {
-        (new \App\Log)->create("texts", $operation->id, "Baja del registro", Auth::user()->id, "D");
+        (new \App\Log)->create("texts", $operation->id, "Baja del registro", \Auth::user()->id, "D");
         return (new \App\Http\Controllers\Auth\BasicController)->delete($label, (new Label)->getFillable());
     }
 }
