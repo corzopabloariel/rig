@@ -123,6 +123,22 @@ class UserController extends Controller
         return $user;
     }
 
+    public function password(Request $request, User $user)
+    {
+        \DB::beginTransaction();
+        try {
+            if (empty($request->pass))
+                return json_encode(["error" => 1, "msg" => "La contraseña no puede estar vacia"]);
+            $user->fill(["password" => \Hash::make($request->pass)]);
+            $user->save();
+        } catch (\Throwable $th) {
+            \DB::rollback();
+            return json_encode(["error" => 1, "msg" => $th->errorInfo[2]]);
+        }
+        \DB::commit();
+        return json_encode(["success" => true, "error" => 0, "msg" => "Contraseña cambiada"]);
+    }
+
     /**
      * Show the form for editing the specified resource.
      *

@@ -32,6 +32,7 @@
                                     <a class="dropdown-item" href="{{ route('images.index') }}"><i class="far fa-images mr-2"></i>Imágenes sueltas</a>
                                     <a class="dropdown-item" href="{{ route('parameters.index') }}"><i class="fas fa-wrench mr-2"></i>Parámetros del sistema</a>
                                     <a class="dropdown-item" href="{{ route('datos') }}"><i class="fas fa-briefcase mr-2"></i>Datos de RIG</a>
+                                    <a class="dropdown-item" href="{{ route('logs') }}"><i class="fas fa-clipboard-list mr-2"></i>Logs</a>
                                     @endif
                                     <a class="dropdown-item" href="{{ route('logout') }}"><i class="fas text-danger fa-power-off mr-2"></i>Salir</a>
                                 </div>

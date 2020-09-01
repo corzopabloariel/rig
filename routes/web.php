@@ -13,20 +13,21 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('access');
-});
+Route::get('/', ['uses' => 'FormController@home', 'as' => 'home']);
 Route::post('/', ['uses' => 'FormController@access', 'as' => 'access.post']);
+Route::post('password', ['uses' => 'FormController@password', 'as' => 'password']);
 
 Auth::routes();
 Route::get('logout', ['uses' => 'Auth\LoginController@logout' , 'as' => 'logout']);
 Route::group(['middleware' => ['auth', 'role:root'], 'prefix' => 'root'], function() {
     Route::get('/', ['uses' => 'HomeController@index' , 'as' => 'root']);
     Route::match(['post', 'get'], 'forms', ['uses' => 'HomeController@forms' , 'as' => 'forms']);
+    Route::match(['post', 'get'], 'statements', ['uses' => 'HomeController@statements' , 'as' => 'statements']);
     Route::match(['post', 'get'], 'datos', ['uses' => 'HomeController@datos' , 'as' => 'datos']);
     Route::delete('file', ['uses' => 'Auth\BasicController@deleteFile', 'as' => 'deleteFile']);
     Route::post('edit', ['uses' => 'Auth\BasicController@edit', 'as' => 'edit']);
     Route::get('update', ['uses' => 'Auth\BasicController@update', 'as' => 'update.index']);
+    Route::get('logs', ['uses' => 'HomeController@logs', 'as' => 'logs']);
 
     /**
      * Parameters
@@ -56,6 +57,8 @@ Route::group(['middleware' => ['auth', 'role:root'], 'prefix' => 'root'], functi
     Route::post('users/{user}', ['uses' => 'UserController@update', 'as' => 'users.update']);
     Route::delete('users/{user}', ['uses' => 'UserController@destroy', 'as' => 'users.destroy']);
     Route::get('mis-datos', ['uses' => 'UserController@datos', 'as' => 'user.datos']);
+
+    Route::post('user/change-password/{user}', ['uses' => 'UserController@password', 'as' => 'users.password']);
     /**
      * Helps
      */
@@ -99,4 +102,6 @@ Route::group(['middleware' => ['auth', 'role:adm'], 'prefix' => 'adm'], function
 
 Route::group(['middleware' => ['auth', 'role:user'], 'prefix' => 'client'], function() {
     Route::get('/', ['uses' => 'HomeController@client' , 'as' => 'client']);
+
+    Route::post('statements', ['uses' => 'FormController@statements' , 'as' => 'client.statements']);
 });

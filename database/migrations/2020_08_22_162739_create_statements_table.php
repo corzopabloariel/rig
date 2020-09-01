@@ -16,10 +16,14 @@ class CreateStatementsTable extends Migration
         Schema::create('statements', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('operation_id');
-            $table->unsignedBigInteger('text_id');
+            $table->unsignedBigInteger('user_id');
+            $table->json('data')->nullable()->default(NULL);//Posible formulario
+            $table->text('obs')->nullable()->default(NULL);
+            $table->softDeletes();
+            $table->timestamps();
 
             $table->foreign('operation_id')->references('id')->on('operations')->onDelete('cascade');
-            $table->foreign('text_id')->references('id')->on('texts')->onDelete('cascade');
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
         });
     }
 

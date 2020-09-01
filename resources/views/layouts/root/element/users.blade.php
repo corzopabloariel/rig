@@ -1,3 +1,33 @@
+@push('modal')
+<div class="modal fade bd-example-modal-sm" id="passModal" role="dialog" aria-labelledby="modalPassLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-sm" role="document">
+        <div class="modal-content">
+            <div class="modal-header bg-light">
+                <h5 class="modal-title" id="modalPassLabel">Cambiar contraseña</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form id="formPass" onsubmit="event.preventDefault(); changePass(this);" action="" method="post">
+                @csrf
+                <div class="modal-body">
+                    <div id="dato-cliente" class="mb-4"></div>
+                    <label for="pass">Contraseña nueva</label>
+                    <div class="input-group">
+                        <input required type="text" id="pass" placeholder="Contraseña nueva" name="pass" class="form-control rounded-0 border-top-0 border-left-0 border-primary"/>
+                        <div class="input-group-append">
+                            <button class="btn btn-outline-primary rounded-0" type="button" onclick="mostrar(this);">Ocultar</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer bg-light">
+                    <button type="submit" class="btn btn-primary">CAMBIAR</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+@endpush
 <section class="my-3">
     <div class="container-fluid">
         @isset($data["section"])
@@ -33,6 +63,73 @@
     window.pyrus.push({entidad: new Pyrus(entity), tipo: "U"});
     window.pyrus.push({entidad: new Pyrus("user_email"), tipo: "M", column: "emails", function: "emails"});
 
+    mostrar = function( t ) {
+        if( $( t ).closest( '.input-group' ).find( 'input' ).attr( 'type' ) == "text" ) {
+            $( t ).text( "Ocultar" );
+            $( t ).closest( '.input-group' ).find( 'input' ).attr( 'type' , 'password' );
+        } else {
+            $( t ).text( "Mostrar" );
+            $( t ).closest( '.input-group' ).find( 'input' ).attr( 'type' , 'text' );
+        }
+    };
+
+    passwordFunction = (...arg) => {
+        let index = $(arg[0]).closest("tr").index();
+        let row = window.data.elements.data[index];
+        document.querySelector("#formPass").action = `${url_simple}root/user/change-password/${arg[1]}`;
+        document.querySelector("#dato-cliente").innerHTML = `${row.name} ${row.lastname}` + (row.comitente !== null ? ` #${row.comitente}` : '');
+        $("#passModal").modal("show");
+    };
+
+    changePass = t => {
+        if (document.querySelector("#pass").value === "") {
+            Toast.fire({
+                icon: 'warning',
+                title: 'Complete una contraseña'
+            });
+            return false;
+        }
+        Toast.fire({
+            icon: 'warning',
+            title: 'Espere'
+        });
+        let idForm = t.id;
+        let url = t.action;
+        let method = t.method;
+        let formElement = document.getElementById(idForm);
+        let formData = new FormData(formElement);
+
+        axios({
+            method: method,
+            url: url,
+            data: formData,
+            responseType: 'json',
+            config: { headers: {'Content-Type': 'multipart/form-data' }}
+        })
+        .then(function(res) {
+            if(parseInt(res.data.error) == 1) {
+                Toast.fire({
+                    icon: 'error',
+                    title: res.data.msg ? res.data.msg : 'Ocurrió un error'
+                });
+            } else {
+                document.querySelector("#pass").value = "";
+                Toast.fire({
+                    icon: 'success',
+                    title: res.data.msg
+                });
+                $( "#passModal" ).modal( "hide" );
+            }
+        })
+        .catch(function(err) {
+            Toast.fire({
+                icon: 'error',
+                title: 'Error'
+            });
+        })
+        .then(function() {});
+    };
+
     emailsFunction = (value = null) => {
         console.log(value)
         if (value) {
@@ -60,31 +157,14 @@
     /** -------------------------------------
      *      INICIO
      ** ------------------------------------- */
-    init(data => {
-        /*window.pyrus.forEach(p => {
-            switch (p.tipo) {
-                case "U":
-                    if (p.column) {
-                        if (window.data.elementos[p.column])
-                            p.entidad.show(url_simple, window.data.elementos[p.column]);
-                    } else
-                        p.entidad.show(url_simple, window.data.elementos);
-                break;
-                case "A":
-                case "M":
-                    if (window.data.elementos[p.column])
-                        window.data.elementos[p.column].forEach(a => {
-                            const func = new Function(`${p.function}Function(${JSON.stringify(a)})`);
-                            func.call(null);
-                        });
-                break;
-            }
-        })*/
-    },
+    init(data => {},
         true,
         true,
         "table",
         true,
-        btn = ["e" , "d"]);
+        btn = entity == "user" ? ["e" , "d"] : [],
+        [
+            {icon: '<i class="fas fa-key"></i>', class: 'btn-dark', title: 'Blanquear constraseña', function : 'password'},
+        ]);
 </script>
 @endpush

@@ -27,6 +27,27 @@
     @stack('styles')
 </head>
 <body>
+    @if(session('success'))
+        <div class="position-fixed w-100 text-center" style="z-index:9999; top:0;">
+            <div class="alert alert-success alert-dismissible fade show d-inline-block mb-0">
+                {!! session('success')["mssg"] !!}
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+        </div>
+    @endif
+
+    @if($errors->any())
+        <div class="position-fixed w-100 text-center" style="z-index:9999; top: 0;">
+            <div class="alert alert-danger alert-dismissible fade show d-inline-block mb-0">
+                {!! $errors->first('mssg') !!}
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+        </div>
+    @endif
     @stack('modal')
     <div class="body" id="app">
         @yield('content')

@@ -1,46 +1,34 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="container">
-    <div class="row justify-content-center">
-        <div class="col-md-8">
-            <div class="card">
-                <div class="card-header">{{ __('Confirm Password') }}</div>
-
-                <div class="card-body">
-                    {{ __('Please confirm your password before continuing.') }}
-
-                    <form method="POST" action="{{ route('password.confirm') }}">
-                        @csrf
-
-                        <div class="form-group row">
-                            <label for="password" class="col-md-4 col-form-label text-md-right">{{ __('Password') }}</label>
-
-                            <div class="col-md-6">
-                                <input id="password" type="password" class="form-control @error('password') is-invalid @enderror" name="password" required autocomplete="current-password">
-
-                                @error('password')
-                                    <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $message }}</strong>
-                                    </span>
-                                @enderror
+<div class="container-fluid h-100">
+    <div class="row h-100">
+        <div class="col-12 d-flex justify-content-center align-items-center h-100">
+            <div class="col-12 col-sm-9 col-md-6 col-lg-5 col-xl-4">
+                <div class="card shadow-sm">
+                    <div class="card-header">
+                        @php
+                        $img = asset('images/rig-logo.png');
+                        $rig = \App\Rig::first();
+                        if ($rig) {
+                            if (!empty($rig->images["logo"]))
+                                $img = asset($rig["images"]["logo"]["i"]);
+                        }
+                        $img .= "?t=" . time();
+                        @endphp
+                        <img src="{{ $img }}" class="card__img" alt="RIG" srcset="">
+                    </div>
+                    <div class="card-body">
+                        {!! textPrint("TXT.PASS") !!}
+                        <form method="POST" action="{{ URL::to('password') }}">
+                            @csrf
+                            <div class="form-group">
+                                <input type="password" class="form-control" id="password" name="password" aria-label="{{ labelElement('LBL.PASS.LOGIN') }}" placeholder="{{ labelElement('LBL.PASS.LOGIN') }}">
+                                {!! helpTag("INP.PASS.LOGIN") !!}
                             </div>
-                        </div>
-
-                        <div class="form-group row mb-0">
-                            <div class="col-md-8 offset-md-4">
-                                <button type="submit" class="btn btn-primary">
-                                    {{ __('Confirm Password') }}
-                                </button>
-
-                                @if (Route::has('password.request'))
-                                    <a class="btn btn-link" href="{{ route('password.request') }}">
-                                        {{ __('Forgot Your Password?') }}
-                                    </a>
-                                @endif
-                            </div>
-                        </div>
-                    </form>
+                            <button class="btn btn-block btn-dark text-center" type="submit">Establecer contraseña y acceder</button>
+                        </form>
+                    </div>
                 </div>
             </div>
         </div>

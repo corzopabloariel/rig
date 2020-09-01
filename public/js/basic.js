@@ -1159,7 +1159,7 @@ function init(callbackOK, normal = true, widthElements = true, type = "table", w
     else
         withAction = false;
     if (normal) {
-        if (withAction)
+        if (withAction || btnsAdd !== null)
             targetElements.appendChild(entidad.table([{NAME: "ACCIONES", COLUMN: "acciones", WIDTH: "100px"}]));
         else {
             btn = [];
@@ -1167,7 +1167,7 @@ function init(callbackOK, normal = true, widthElements = true, type = "table", w
         }
         entidad.editor();
         if (btnsAdd !== null) {
-            btnsAdd.forEach(b => {
+            /*btnsAdd.forEach(b => {
                 const button = document.createElement("button");
                 button.classList.add(b.class, "btn", "text-center", "button--form");
                 button.innerHTML = `${b.icon} ${b.title}`;
@@ -1176,7 +1176,7 @@ function init(callbackOK, normal = true, widthElements = true, type = "table", w
                     document.querySelector("#btnADD").nextElementSibling.appendChild(button);
                 else
                     document.querySelector("section").querySelector(".container-fluid").querySelector("div").appendChild(button);
-            });
+            });*/
         }
         window.button_pyrus = [btn, btnsAdd];
         if (widthElements) {

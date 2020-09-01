@@ -16,9 +16,10 @@ class ClientMail extends Mailable
      *
      * @return void
      */
-    public function __construct($data)
+    public function __construct($data, $file = null)
     {
         $this->data = $data;
+        $this->file = $file;
     }
 
     /**
@@ -31,6 +32,8 @@ class ClientMail extends Mailable
         $mail = $this
             ->subject($this->data["subject"])->view('email.client')
             ->with($this->data);
+        if (!empty($this->file))
+            $mail->attachData($this->file, "declaracion_" . time() . ".pdf");
         return $mail;
     }
 }

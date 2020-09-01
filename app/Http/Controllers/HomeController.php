@@ -61,6 +61,8 @@ class HomeController extends Controller
     {
         $data = [
             "view" => "home",
+            "statements" => \Auth::user()->statements,
+            "forms" => \App\Form::orderBy("order")->get(),
             "operations" => \App\Operation::orderBy("name")->get(),
             "texts" => \App\Text::where("code", "LIKE", "TXT.STA%")->pluck("data", "code")
         ];
@@ -99,5 +101,29 @@ class HomeController extends Controller
         }
         \DB::commit();
         return back();
+    }
+
+    public function statements(Request $request)
+    {
+        $dataRequest = $request->all();
+        if (empty($dataRequest)) {
+            $data = [
+                "statements" => \App\Statement::withTrashed()->paginate(),
+                "view" => "statements",
+                "section" => "Declaraciones"
+            ];
+            return view('home',compact('data'));
+        }
+    }
+
+    public function logs(Request $request)
+    {
+        $dataRequest = $request->all();
+        $data = [
+            "logs" => \App\Log::paginate(),
+            "view" => "logs",
+            "section" => "Logs del Sistema"
+        ];
+        return view('home',compact('data'));
     }
 }

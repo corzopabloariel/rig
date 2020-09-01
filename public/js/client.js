@@ -16,13 +16,14 @@ function enviar(evt) {
     let idForm = this.id;
     let formElement = document.getElementById(idForm);
     let formData = new FormData(this);
+    formData.append("statement_text", document.querySelector("#statement_text").innerHTML)
     grecaptcha.ready(function() {
         $( ".form-control" ).prop( "readonly" , true );
         Toast.fire({
             icon: 'warning',
             title: 'Espere, enviando'
         });
-        grecaptcha.execute(document.querySelector('meta[name="public-key"]').content, {action: 'access'}).then( function( token ) {
+        grecaptcha.execute(document.querySelector('meta[name="public-key"]').content, {action: 'statements'}).then( function( token ) {
             formData.append( "token", token );
             axios({
                 method: method,
@@ -34,7 +35,13 @@ function enviar(evt) {
             .then((res) => {
                 $(".form-control").prop("readonly", false);
                 if (!parseInt(res.data.error)) {
-                    document.querySelector("#card-access").innerHTML = res.data.txt;
+                    Toast.fire({
+                        icon: 'success',
+                        title: res.data.txt
+                    });
+                    setTimeout(() => {
+                        location.reload();
+                    }, 800);
                 } else
                     Toast.fire({
                         icon: 'error',

@@ -31,7 +31,8 @@ class User extends Authenticatable
         'document_number',
         'document_type',
         'password',
-        'profile'
+        'profile',
+        'remember_token'
     ];
 
     /**
@@ -67,5 +68,9 @@ class User extends Authenticatable
     public function emails()
     {
         return $this->hasMany("App\Email", "user_id");
+    }
+    public function statements()
+    {
+        return $this->hasMany("App\Statement", "user_id");
     }
 }

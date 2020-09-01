@@ -20,7 +20,7 @@ class UsersTableSeeder extends Seeder
             0 => 
             array (
                 'id' => 1,
-                'name' => 'Pablo',
+                'name' => 'Pablo Ariel',
                 'lastname' => 'Corzo',
                 'comitente' => NULL,
                 'document_number' => NULL,
@@ -30,7 +30,7 @@ class UsersTableSeeder extends Seeder
                 'remember_token' => NULL,
                 'deleted_at' => NULL,
                 'created_at' => '2020-08-24 03:18:11',
-                'updated_at' => '2020-08-24 03:18:11',
+                'updated_at' => '2020-08-28 23:26:55',
             ),
             1 => 
             array (
@@ -61,6 +61,21 @@ class UsersTableSeeder extends Seeder
                 'deleted_at' => NULL,
                 'created_at' => '2020-08-24 15:17:02',
                 'updated_at' => '2020-08-24 15:17:02',
+            ),
+            3 => 
+            array (
+                'id' => 27,
+                'name' => 'Pablo',
+                'lastname' => 'Pedraza',
+                'comitente' => 554813541,
+                'document_number' => NULL,
+                'document_type' => NULL,
+                'password' => 'SIN PASS',
+                'profile' => 'user',
+                'remember_token' => 'Wru9cdQMFBXjJMCeopR1T1DW8QITE2MvdRR7LIQb2mzYi6PPFoFdTTRdazUx',
+                'deleted_at' => NULL,
+                'created_at' => '2020-08-31 13:36:14',
+                'updated_at' => '2020-08-31 13:36:14',
             ),
         ));
         

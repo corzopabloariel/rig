@@ -10,4 +10,11 @@ class Email extends Model
         "user_id",
         "email"
     ];
+
+    /**
+     * @return model
+     */
+    public function user() {
+        return $this->belongsTo("App\User", "user_id");
+    }
 }

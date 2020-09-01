@@ -45,6 +45,32 @@ class TextsTableSeeder extends Seeder
                 'created_at' => '2020-08-24 15:38:48',
                 'updated_at' => '2020-08-24 15:38:48',
             ),
+            2 => 
+            array (
+                'id' => 3,
+                'code' => 'TXT.1.LOG',
+                'data' => '<p>Este texto se pondrá como respuesta al colocar un email en&nbsp;<a href="http://3.19.243.243/" target="_blank">http://3.19.243.243/</a>. Si encuentra el mismo en el <strong>TXT</strong>, se mandará los correos.</p>
+
+<p>En breve recibirá el correo con la información.</p>',
+                'deleted_at' => NULL,
+                'created_at' => '2020-08-30 03:58:26',
+                'updated_at' => '2020-08-30 05:01:24',
+            ),
+            3 => 
+            array (
+                'id' => 6,
+                'code' => 'EMAIL.HASH',
+                'data' => '<p>Sr. Cliente,</p>
+
+<p>&nbsp;</p>
+
+<p>Este mail recibe por ....</p>
+
+<p>El sistema buscar la siguiente palabra para poner el link del hash: __EMAIL.HASH__, No lo borre, iempre debe estar presente</p>',
+                'deleted_at' => NULL,
+                'created_at' => '2020-08-30 05:54:41',
+                'updated_at' => '2020-08-30 05:54:41',
+            ),
         ));
         
         

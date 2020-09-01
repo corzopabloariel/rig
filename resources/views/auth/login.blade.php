@@ -1,16 +1,6 @@
 @extends('layouts.app')
 
 @section('content')
-@if($errors->any())
-    <div class="position-fixed w-100 text-center" style="z-index:9999; top: 0;">
-        <div class="alert alert-danger alert-dismissible fade show d-inline-block mb-0">
-            {!! $errors->first('mssg') !!}
-            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-            </button>
-        </div>
-    </div>
-@endif
 <div class="container-fluid h-100">
     <div class="row justify-content-center align-content-center h-100">
         <div class="col-12 col-sm-9 col-md-6 col-lg-5 col-xl-4">
