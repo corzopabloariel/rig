@@ -22,7 +22,7 @@ class AppServiceProvider extends ServiceProvider
      * @return void
      */
     public function boot()
-    {
+     {
         $aux = \App\Rig::first();
         $publicKey = $aux->captcha["public"];
 

@@ -93,12 +93,12 @@ class UserController extends Controller
     public function store(Request $request)
     {
         $data = (new \App\Http\Controllers\Auth\BasicController)->store($request, null, new User, null, true);
-        (new \App\Log)->create("users", $user->id, "Nuevo registro", \Auth::user()->id, "C");
         try {
             $data = json_decode($data, true);
             $emails = $data["data"]["emails"];
             unset($data["data"]["emails"]);
             $user = User::create($data["data"]);
+            (new \App\Log)->create("users", $user->id, "Nuevo registro", \Auth::user()->id, "C");
             if ($data) {
                 for ($i = 0; $i < count($emails); $i++) {
                     $emails[$i]["user_id"] = $user->id;
