@@ -195,6 +195,6 @@ class UserController extends Controller
     public function destroy(User $user)
     {
         (new \App\Log)->create("users", $user->id, "Baja del registro", \Auth::user()->id, "D");
-        return (new \App\Http\Controllers\Auth\BasicController)->delete($label, (new Label)->getFillable());
+        return (new \App\Http\Controllers\Auth\BasicController)->delete($label, (new User)->getFillable());
     }
 }
