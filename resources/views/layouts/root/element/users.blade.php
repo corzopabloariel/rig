@@ -162,7 +162,7 @@
         true,
         "table",
         true,
-        btn = entity == "user" ? ["e" , "d"] : [],
+        btn = entity == "user" ? ["e" , "d", "df"] : ["d", "df"],
         [
             {icon: '<i class="fas fa-key"></i>', class: 'btn-dark', title: 'Blanquear constraseña', function : 'password'},
         ]);

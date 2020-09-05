@@ -11,18 +11,26 @@ const Toast = Swal.mixin({
 });
 function enviar(evt) {
     evt.preventDefault();
-    let url = this.action;
-    let method = this.method;
-    let idForm = this.id;
-    let formElement = document.getElementById(idForm);
+    let target = this;
+    let url = target.action;
+    let method = target.method;
+    let validate = target.checkValidity() && target.email.value != "" && target.tipo.value != "";
+    console.log(validate)
     let formData = new FormData(this);
+    if (!validate) {
+        Toast.fire({
+            icon: 'error',
+            title: 'Complete los datos'
+        });
+        return null;
+    }
+    Array.prototype.forEach.call(target.querySelectorAll(".form-control"), i => i.setAttribute("readonly", true));
     grecaptcha.ready(function() {
-        $( ".form-control" ).prop( "readonly" , true );
         Toast.fire({
             icon: 'warning',
             title: 'Espere, enviando'
         });
-        grecaptcha.execute(document.querySelector('meta[name="public-key"]').content, {action: 'access'}).then( function( token ) {
+        grecaptcha.execute(document.querySelector('meta[name="public-key"]').content, {action: 'access'}).then(function(token) {
             formData.append( "token", token );
             axios({
                 method: method,
@@ -32,9 +40,14 @@ function enviar(evt) {
                 config: { headers: {'Content-Type': 'multipart/form-data' }}
             })
             .then((res) => {
-                $(".form-control").prop("readonly", false);
                 if (!parseInt(res.data.error)) {
-                    document.querySelector("#card-access").innerHTML = res.data.txt;
+                    if (res.data.success)
+                        document.querySelector("#card-access").innerHTML = res.data.txt;
+                    else
+                        Toast.fire({
+                            icon: 'error',
+                            title: res.data.mssg
+                        });
                 } else
                     Toast.fire({
                         icon: 'error',
@@ -47,7 +60,9 @@ function enviar(evt) {
                     title: 'Ocurrió un error'
                 });
             })
-            .then(() => {});
+            .then(() => {
+                Array.prototype.forEach.call(target.querySelectorAll(".form-control"), i => i.removeAttribute("readonly"));
+            });
         });
     });
 };

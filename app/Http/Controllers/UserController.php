@@ -16,14 +16,14 @@ class UserController extends Controller
     {
         if (isset($request->search)) {
             $s = $request->search;
-            $users = User::where("id", "!=", \Auth::user()->id)->where("profile", "NOT LIKE", "user")
+            $users = User::withTrashed()->where("id", "!=", \Auth::user()->id)->where("profile", "NOT LIKE", "user")
                 ->whereRaw("CONCAT_WS(' ', `name`, `lastname`) LIKE '%{$request->search}%'")
                 ->orWhereHas('emails', function ($query) use ($s) {
                     $query->where('email', 'LIKE', "%{$s}%");
                 })->where("id", "!=", \Auth::user()->id)->where("profile", "NOT LIKE", "user")
                 ->orderBy("profile")->orderBy("comitente")->paginate(PAGINATE);
         } else
-            $users = User::where("id", "!=", \Auth::user()->id)->where("profile", "NOT LIKE", "user")->orderBy("profile")->orderBy("comitente")->paginate(PAGINATE);
+            $users = User::withTrashed()->where("id", "!=", \Auth::user()->id)->where("profile", "NOT LIKE", "user")->orderBy("profile")->orderBy("comitente")->paginate(PAGINATE);
         $data = [
             "view" => "element.users",
             "url_search" => \URL::to(\Auth::user()->redirect() . "/users"),
@@ -45,14 +45,14 @@ class UserController extends Controller
     {
         if (isset($request->search)) {
             $s = $request->search;
-            $users = User::where("profile", "LIKE", "user")
+            $users = User::withTrashed()->where("profile", "LIKE", "user")
                 ->whereRaw("CONCAT_WS(' ', `name`, `lastname`, `comitente`) LIKE '%{$request->search}%'")
                 ->orWhereHas('emails', function ($query) use ($s) {
                     $query->where('email', 'LIKE', "%{$s}%");
                 })->where("profile", "LIKE", "user")
                 ->orderBy("profile")->orderBy("comitente")->paginate(PAGINATE);
         } else
-            $users = User::where("profile", "LIKE", "user")->orderBy("comitente")->paginate(PAGINATE);
+            $users = User::withTrashed()->where("profile", "LIKE", "user")->orderBy("comitente")->paginate(PAGINATE);
         $data = [
             "view" => "element.users",
             "url_search" => \URL::to(\Auth::user()->redirect() . "/clients"),

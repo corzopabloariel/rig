@@ -40,6 +40,6 @@
         true,
         "table",
         true,
-        btn = ["e" , "d"]);
+        btn = ["e" , "d", "df"]);
 </script>
 @endpush

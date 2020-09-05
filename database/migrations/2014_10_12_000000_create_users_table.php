@@ -15,14 +15,20 @@ class CreateUsersTable extends Migration
     {
         Schema::create('users', function (Blueprint $table) {
             $table->id();
-            $table->string('name', 100);
-            $table->string('lastname', 150)->nullable()->default(NULL);
-            //$table->string('email')->unique();
-            $table->integer('comitente')->nullable()->default(NULL);
-			$table->integer('document_number')->nullable()->default(NULL);
-            $table->enum('document_type', ['LC', 'LE', 'DNI', 'CUIT', 'CUIL'])->nullable()->default(NULL);
             $table->string('password');
             $table->enum('profile', ['root', 'adm', 'user']);
+
+            $table->string('tipo', 20)->nullable()->default(NULL);
+            $table->string('comitente', 20)->nullable()->default(NULL);
+            $table->string('nombre', 200);
+            $table->string('domicilio', 200)->nullable()->default(NULL);
+            $table->string('post', 20)->nullable()->default(NULL);
+            $table->text('localidad')->nullable()->default(NULL);
+            $table->string('pais', 20)->nullable()->default(NULL);
+            $table->string('telefono', 100)->nullable()->default(NULL);
+            $table->string('cuit', 30)->nullable()->default(NULL);
+            $table->string('docu', 5)->nullable()->default(NULL);
+            $table->string('numero_doc', 30)->nullable()->default(NULL);
             $table->rememberToken();
             $table->softDeletes();
             $table->timestamps();

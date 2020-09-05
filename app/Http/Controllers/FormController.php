@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Session;
 use App\Mail\ClientMail;
 use App\Mail\NoticeMail;
 use Barryvdh\DomPDF\Facade as PDF;
+use Illuminate\Validation\Rule;
 
 class FormController extends Controller
 {
@@ -141,12 +142,12 @@ class FormController extends Controller
             $hash = explode("===..//email=", $request->hash);
             $email = \App\Email::where("email", $hash[1])->first();
             $user = $email->user;
-            if(\Hash::check($user->comitente, $hash[0])) {
+            if(\Hash::check(strval($user->comitente), $hash[0])) {
                 // LIMPIO remember_token
                 Session::put('user', $user);
                 return view('auth.passwords.confirm');
             }
-            dd($user, $hash);
+            return redirect("/")->withErrors(['mssg' => "Datos incorrectos o no encontrados"]);
         }
     }
 
@@ -182,7 +183,7 @@ class FormController extends Controller
     {
         $requestData = $request->all();
         $privateKey = \App\Rig::first()->captcha["private"];
-        $validator = Validator::make($requestData, ["email" => "required|email"]);
+        $validator = Validator::make($requestData, ["tipo" => "required|" . Rule::in(\App\User::$tipo), "email" => "required|email"]);
         if ($validator->fails())
             return json_encode(["error" => 1, "mssg" => "Email no válido."]);
         $captcha = $requestData["token"];
@@ -216,47 +217,60 @@ class FormController extends Controller
                     return ["error" => 0, "success" => false, "txt" => $txt];
                 }
             }
-            $search = self::search(strtolower($request->email));
+            $search = self::search(strtolower($request->email), $request->tipo);
             \DB::beginTransaction();
             try {
                 /**
-                 * 0 => NOMBRE;
-                 * 1 => APELLIDO;
-                 * 2 => EMAILS
-                 * 3 => COMITENTE
+                 * 0.TIPO
+                 * 1.NUMERO ->comitente
+                 * 2.NOMBRE
+                 * 3.DOMICILIO
+                 * 4.POST
+                 * 5.LOCALIDAD
+                 * 6.PAIS
+                 * 7.TELEFONO
+                 * 8.CUIT
+                 * 9.DOCU
+                 * 10.NUMERO_DOC
+                 * 11.FEC_ALTA
+                 * 12.E_MAIL
+                 * 13.MGER
+                 * 14.ULT_MOVI
+                 * 15.ESTADO
+                 * 16.NACIONALIDAD
+                 * 17.FEC_BAJA
                  */
                 if ($search) {
-                    $search = explode(";", $search);
+                    $search = explode("\t", $search);
+                    $search = array_map("self::clear", $search);
                     $link = null;
-                    $user = \App\User::where("comitente", $search[3])->first();
+                    $user = \App\User::where("comitente", $search[1])->first();
+                    $data = [];
+                    $data["nombre"] = $search[2];
+                    $data["comitente"] = $search[1];
+                    $data['tipo'] = $search[0];
+                    $data['domicilio'] = $search[3];
+                    $data['post'] = $search[4];
+                    $data['localidad'] = $search[5];
+                    $data['pais'] = $search[6];
+                    $data['telefono'] = $search[7];
+                    $data['cuit'] = $search[8];
+                    $data['docu'] = $search[9];
+                    $data['numero_doc'] = $search[10];
+                    $data["profile"] = "user";
+                    $data["password"] = "SIN PASS";
+                    $data["remember_token"] = \Hash::make($search[1]);
+                    $link = "{$data["remember_token"]}===..//";
                     if (!$user) {
-                        $data = [];
-                        if (!empty($search[0]))
-                            $data["name"] = trim($search[0]);
-                        if (!empty($search[1]))
-                            $data["lastname"] = trim($search[1]);
-                        $data["comitente"] = trim($search[3]);
-                        $data["profile"] = "user";
-                        $data["password"] = "SIN PASS";
-                        $data["remember_token"] = \Hash::make(trim($search[3]));
-                        $link = "{$data["remember_token"]}===..//";
                         $user = \App\User::create($data);
                         (new \App\Log)->create("users", $user->id, "Nuevo registro", NULL, "C");
                     } else {
-                        $data = [];
-                        if (!empty($search[0]))
-                            $data["name"] = trim($search[0]);
-                        if (!empty($search[1]))
-                            $data["lastname"] = trim($search[1]);
-                        $data["password"] = "SIN PASS";
-                        $data["remember_token"] = \Hash::make(trim($search[3]));
-                        $link = "{$data["remember_token"]}===..//";
                         $user->fill($data);
                         $user->save();
                         (new \App\Log)->create("users", $user->id, "Modificación del registro", NULL, "U");
                     }
                     \App\Email::where('user_id', $user->id)->delete();
-                    $emails = explode("/", $search[2]);
+                    $emails = explode("/", $search[12]);
                     for ($i = 0; $i < count($emails); $i++) {
                         $e = \App\Email::where("email", $emails[$i])->first();
                         if (empty($e))
@@ -275,7 +289,8 @@ class FormController extends Controller
                         ]));
                         (new \App\Log)->create("email", null, "Envio p/ acceso a {$email}", null, "N");
                     }
-                }
+                }// else
+                    //return json_encode(["error" => 0, "success" => false, "mssg" => "Datos no encontrados"]);
             } catch (Exception $e) {
                 \DB::rollback();
                 return ["error" => 1 , "mssg" => "Error"];
@@ -286,15 +301,23 @@ class FormController extends Controller
         //(new \App\Log)->create("email", null, "Baja del registro", null, "N");
     }
 
-    public function search($email) {
-        $filename = public_path() . "/_txt/file.txt";
+    public function clear($e) {
+        $e = trim($e);
+        return empty($e) ? null : $e;
+    }
+
+    public function search(...$args) {
+        $txt = file_get_contents(public_path() . "/_txt/CLIENTE.TXT");
+        if (strpos($txt, $args[0]) === false && strpos($txt, $args[1]) === false)
+            return false;
+        $filename = public_path() . "/_txt/CLIENTE.TXT";
         if (file_exists($filename)) {
             $file = fopen($filename , "r");
             while (!feof($file)) {
                 $row = trim(fgets($file));
                 if( empty($row))
                     continue;
-                if (strpos($row, $email) !== false)
+                if (strpos($row, $args[0]) !== false && strpos($row, $args[1]) !== false)
                     return $row;
             }
         }

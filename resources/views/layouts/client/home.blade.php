@@ -8,7 +8,7 @@
             <a href="{{ route(Auth::user()->redirect()) }}">
                 <img src="{{ asset('images/rig-logo.png') }}" class="card__img" alt="RIG" srcset="">
             </a>
-            <h1 class="text-center text-welcome mt-4">Bienvenido {{Auth::user()->fullname()}}</h1>
+            <h1 class="text-center text-welcome mt-4">Bienvenido {{Auth::user()->nombre}}</h1>
             <div id="statement_text">
                 @if ($data["texts"]->isNotEmpty())
                     @foreach($data["texts"] AS $code => $html)
@@ -66,7 +66,7 @@
             <a href="{{ route(Auth::user()->redirect()) }}">
                 <img src="{{ asset('images/rig-logo.png') }}" class="card__img" alt="RIG" srcset="">
             </a>
-            <h1 class="text-center text-welcome mt-4">Bienvenido {{Auth::user()->fullname()}}</h1>
+            <h1 class="text-center text-welcome mt-4">Bienvenido {{Auth::user()->nombre}}</h1>
 
             <table class="table table-hover table-bordered table-striped mt-4">
                 <thead class="thead-dark">

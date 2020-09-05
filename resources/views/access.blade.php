@@ -21,10 +21,17 @@
                     <div class="card-body">
                         <div class="py-5" id=card-access>
                             {!! textPrint("TXT.LOGIN") !!}
-                            <form action="" method="post" id=form>
+                            <form action="" method="post" name="formAccess" id=form>
                                 @csrf
                                 <div class="form-group">
-                                    <input type="email" class="form-control" id="email" name="email" aria-describedby="emailHelp" aria-label="{{ labelElement('LBL.EMAIL.LOGIN') }}" placeholder="{{ labelElement('LBL.EMAIL.LOGIN') }}">
+                                    <div class="input-group">
+                                        <select class="custom-select" style="max-width: 120px;" required name="tipo">
+                                            <option selected hidden value="">Tipo</option>
+                                            <option>TITU.</option>
+                                            <option>APOD.</option>
+                                        </select>
+                                        <input type="email" class="form-control" id="email" name="email" aria-describedby="emailHelp" aria-label="{{ labelElement('LBL.EMAIL.LOGIN') }}" placeholder="{{ labelElement('LBL.EMAIL.LOGIN') }}">
+                                    </div>
                                     {!! helpTag("INP.EMAIL.LOGIN") !!}
                                 </div>
                                 <button class="btn btn-block btn-dark text-center" type="submit">Enviar</button>

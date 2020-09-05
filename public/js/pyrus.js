@@ -388,13 +388,16 @@ class Pyrus {
         return html;
     };
     convert = (value, target, url, type, specification, elements, column, id) => {
-        if (value === null) {
+        if (value === null && type !== "TP_DELETE") {
             target.textContent = `SIN "${specification.NOMBRE}"`;
             return target;
         }
         const entidad = Array.isArray(window.pyrus) ? window.pyrus[0].entidad : window.pyrus;
         const btn_element = document.createElement("button");
         switch(type) {
+            case "TP_DELETE":
+                target.innerHTML = value ? "Eliminado" : "Activo";
+                break;
             case "TP_IMAGE":
                 let date = new Date();
                 let info = value.d;
@@ -585,6 +588,7 @@ class Pyrus {
             td.style.maxWidth = "500px";
             td.style.width = y.WIDTH;
             td.dataset.column = y.COLUMN;
+            console.log(y.COLUMN)
             return this.convert(elements[y.COLUMN], td, url, this.especificacion[y.COLUMN].TIPO, this.especificacion[y.COLUMN], elements, y, id);
         });
         cols.forEach(c => tr.appendChild(c));
@@ -599,15 +603,17 @@ class Pyrus {
             td.style.maxWidth = "150px";
             let buttons = `<td class="text-center">`;
                 buttons += `<div class="d-flex justify-content-center">`;
-                if( buttonsOK.indexOf( "c" ) >= 0 )
+                if (buttonsOK.indexOf( "c" ) >= 0 && !elements.deleted_at)
                     buttons += `<button data-toggle="tooltip" data-placement="left" title="Copiar elemento" style="font-size: 12px;" onclick="clone(this,'${id}')" class="btn text-center btn-info rounded-0"><i class="far fa-clone"></i></button>`;
-                if( buttonsOK.indexOf( "e" ) >= 0 )
+                if (buttonsOK.indexOf( "e" ) >= 0 && !elements.deleted_at)
                     buttons += `<button data-toggle="tooltip" data-placement="left" title="Editar elemento" style="font-size: 12px;" onclick="edit(this,'${id}')" class="btn text-center rounded-0 btn-warning"><i class="fas fa-pencil-alt"></i></button>`;
-                if( buttonsOK.indexOf( "d" ) >= 0 )
+                if (buttonsOK.indexOf( "d" ) >= 0 && !elements.deleted_at)
                     buttons += `<button style="font-size: 12px;" data-toggle="tooltip" data-placement="left" title="Eliminar elemento" onclick="erase(this,'${id}')" class="btn text-center rounded-0 btn-danger"><i class="fas fa-trash-alt"></i></button>`;
-                if( buttonsOK.indexOf( "s" ) >= 0 )
+                if (buttonsOK.indexOf( "df" ) >= 0 && elements.deleted_at)
+                    buttons += `<button style="font-size: 12px;" data-toggle="tooltip" data-placement="left" title="Baja total elemento" onclick="erase(this,'${id}', 1)" class="btn text-center rounded-0 btn-dark"><i class="fas fa-trash-alt"></i></button>`;
+                if (buttonsOK.indexOf( "s" ) >= 0)
                     buttons += `<button style="font-size: 12px;" data-toggle="tooltip" data-placement="left" title="Ver elemento" onclick="see(this,'${id}')" class="btn text-center rounded-0 btn-primary"><i class="fas fa-eye"></i></button>`;
-                if( button !== null ) {
+                if (button !== null && !elements.deleted_at) {
                     button.forEach( function( b ) {
                         buttons += `<button data-toggle="tooltip" data-placement="left" title="${b.title}" style="font-size: 12px;" onclick="${b.function}Function(this,'${id}')" class="btn text-center rounded-0 ${b.class}">${b.icon}</button>`;
                     });
@@ -674,6 +680,7 @@ class Pyrus {
                 if( x.id !== undefined )
                     id = x.id;
             }
+            console.log(x);
             return this.row(x, url, tbody, id, buttonsOK, button);
         }, this);
     };
