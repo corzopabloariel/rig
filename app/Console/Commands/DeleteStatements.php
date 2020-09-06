@@ -44,9 +44,9 @@ class DeleteStatements extends Command
             $total = count($statements);
             $ids = implode(", ", $statements);
             Mail::to(NOTICE)->send(new NoticeMail([
-                "logo" => asset(\App\Rig::first()->images["logo"]["i"]),
+                "logo" => "http://3.19.243.243/" . \App\Rig::first()->images["logo"]["i"],
                 "data" => [
-                    "declaracions" => "Cron de declaraciones activo. Se bajarán en total: {$total}. ID: {$ids}"
+                    "Tarea automática" => "Cron de declaraciones activo. Baja lógica total: {$total}. ID: {$ids}"
                 ]
             ]));
             (new \App\Log)->create("statements", null, "Baja lógica de declaraciones", null, "N");
