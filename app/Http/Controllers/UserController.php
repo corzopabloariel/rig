@@ -88,6 +88,7 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
+        \DB::beginTransaction();
         $data = (new \App\Http\Controllers\Auth\BasicController)->store($request, null, new User, null, true);
         try {
             $data = json_decode($data, true);
@@ -97,16 +98,18 @@ class UserController extends Controller
             (new \App\Log)->create("users", $user->id, "Nuevo registro", \Auth::user()->id, "C");
             if ($data) {
                 for ($i = 0; $i < count($emails); $i++) {
-                    $e = \App\Email::where("email", $emails[$i])->first();
+                    $e = \App\Email::where("email", $emails[$i]["email"])->first();
                     if (empty($e))
-                        $e = \App\Email::create(["email" => $emails[$i]]);
+                        $e = \App\Email::create(["email" => $emails[$i]["email"]]);
                     \App\EmailUser::create(["email_id" => $e->id, "user_id" => $user->id]);
                 }
             }
         } catch (\Throwable $th) {
+            \DB::rollback();
             return json_encode(["error" => 1, "msg" => $th->errorInfo[2]]);
         }
-        return json_encode(["success" => true, "error" => 0, "data" => $data["data"]]);
+        \DB::commit();
+        return json_encode(["success" => true, "error" => 0, "data" => $user]);
     }
 
     /**
@@ -158,9 +161,9 @@ class UserController extends Controller
      */
     public function update(Request $request, User $user)
     {
+        \DB::beginTransaction();
         $data = (new \App\Http\Controllers\Auth\BasicController)->store($request, $user, new User, null, true);
         (new \App\Log)->create("users", $user->id, "Modificación del registro", \Auth::user()->id, "U");
-        \DB::beginTransaction();
         try {
             $data = json_decode($data, true);
             $emails = $data["data"]["emails"];

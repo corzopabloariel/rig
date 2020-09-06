@@ -340,7 +340,7 @@ class BasicController extends Controller
                         for($i = 0; $i < count($attrs); $i++) {
                             $attr = $attrs[$i];
                             $specification = $specifications[$attr];
-                            if ($specification == "TP_ARRAY")
+                            if ($specification == "TP_ARRAY" || $specification == "TP_DELETE")
                                 continue;
                             $detail = isset($details[$attr]) ? $details[$attr] : null;
                             if ($specification == "TP_SLUG")
@@ -369,7 +369,7 @@ class BasicController extends Controller
                             $value = isset($data[$column]) ? $data[$column] : null;
                             $attr = $attrs[$i];
                             $specification = $specifications[$attr];
-                            if ($specification == "TP_ARRAY")
+                            if ($specification == "TP_ARRAY" || $specification == "TP_DELETE")
                                 continue;
                             $detail = isset($details[$attr]) ? $details[$attr] : null;
                             if ($specification == "TP_SLUG")
