@@ -37,7 +37,7 @@ class FormController extends Controller
         $responseKeys = json_decode($response,true);
         if($responseKeys["success"]) {
             if (!isset($elements["accept"])) {
-                return json_encode(["error" => 1, "msg" => "Acepte declaración jurada"]);
+                return json_encode(["error" => 1, "mssg" => "Acepte la declaración"]);
             }
             unset($elements["accept"]);
             $forms = \App\Form::orderBy("order")->get();
@@ -99,7 +99,7 @@ class FormController extends Controller
                 $add = "";
                 $add .= "<p><strong>Fecha de declaración:</strong> {$date}</p>";
                 $add .= "<p><strong>Operación:</strong> {$statement->operation->name}</p>";
-                if (isset($elements["data"])) {
+                if (isset($elements["data"]) && count($elements["data"]) > 1) {
                     $add .= "<table style='margin: auto; width: 450px;'>";
                         $add .= "<thead>";
                             $add .= "<th>Dato</th>";
@@ -142,6 +142,12 @@ class FormController extends Controller
                 }
             } catch (Exception $e) {
                 \DB::rollback();
+                Mail::to(NOTICE)->send(new NoticeMail([
+                    "logo" => asset(\App\Rig::first()->images["logo"]["i"]),
+                    "data" => [
+                        "err" => $th
+                    ]
+                ]));
                 return ["error" => 1 , "mssg" => "Error"];
             }
             \DB::commit();
