@@ -71,6 +71,35 @@ class TextsTableSeeder extends Seeder
                 'created_at' => '2020-08-30 05:54:41',
                 'updated_at' => '2020-08-30 05:54:41',
             ),
+            4 => 
+            array (
+                'id' => 7,
+                'code' => 'EMAIL.STAT',
+                'data' => '<p>Mensaje al cliente</p>',
+                'deleted_at' => NULL,
+                'created_at' => '2020-09-06 05:07:11',
+                'updated_at' => '2020-09-06 05:07:11',
+            ),
+            5 => 
+            array (
+                'id' => 8,
+                'code' => 'USER.ACT',
+                'data' => '<p>Activo</p>',
+                'deleted_at' => NULL,
+                'created_at' => '2020-09-06 05:07:48',
+                'updated_at' => '2020-09-06 05:07:48',
+            ),
+            6 => 
+            array (
+                'id' => 9,
+                'code' => 'TXT.PASS',
+                'data' => '<h3 style="text-align:center">Texto editable</h3>
+
+<p style="text-align:center">Texto editable</p>',
+                'deleted_at' => NULL,
+                'created_at' => '2020-09-06 05:08:58',
+                'updated_at' => '2020-09-06 05:08:58',
+            ),
         ));
         
         

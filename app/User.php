@@ -27,6 +27,7 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
+        'email_id',
         'password',
         'profile',
         'tipo',
@@ -75,15 +76,12 @@ class User extends Authenticatable
         return $elements[$this->profile];
     }
 
-    public function fullname()
-    {
-        return trim($this->name . " " . $this->lastname);
-    }
-
     public function emails()
     {
-        return $this->hasMany("App\Email", "user_id");
+        return $this->belongsToMany('App\Email','email_user')
+            ->withPivot('email_id','id');
     }
+
     public function statements()
     {
         return $this->hasMany("App\Statement", "user_id");

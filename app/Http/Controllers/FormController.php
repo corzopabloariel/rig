@@ -65,9 +65,11 @@ class FormController extends Controller
                 }
             }
 
-            $validator = Validator::make($elements["data"], $validate);
-            if ($validator->fails())
-                return json_encode(["error" => 1, "msg" => "Datos inválidos. Verifique y reintente"]);
+            if (isset($elements["data"])) {
+                $validator = Validator::make($elements["data"], $validate);
+                if ($validator->fails())
+                    return json_encode(["error" => 1, "msg" => "Datos inválidos. Verifique y reintente"]);
+            }
 
             $validator = Validator::make($elements, ["operation_id" => "required|exists:operations,id"]);
             if ($validator->fails())
@@ -141,11 +143,15 @@ class FormController extends Controller
         else {
             $hash = explode("===..//email=", $request->hash);
             $email = \App\Email::where("email", $hash[1])->first();
-            $user = $email->user;
-            if(\Hash::check(strval($user->comitente), $hash[0])) {
-                // LIMPIO remember_token
-                Session::put('user', $user);
-                return view('auth.passwords.confirm');
+            $users = $email->users;
+            if ($users->isNotEmpty()) {
+                $user = $users->where("tipo", $request->tipo)->first();
+                if(\Hash::check(strval($user->comitente), $hash[0])) {
+                    // LIMPIO remember_token
+                    Session::put('user', $user);
+                    Session::put('email', $email);
+                    return view('auth.passwords.confirm');
+                }
             }
             return redirect("/")->withErrors(['mssg' => "Datos incorrectos o no encontrados"]);
         }
@@ -156,14 +162,24 @@ class FormController extends Controller
         $requestData = $request->all();
         $validator = Validator::make($requestData, ["password" => "required"]);
         $user = Session::get('user');
+        $email = Session::get('email');
         if ($validator->fails())
-            return back()->withErrors(['mssg' => "Ingrense una contraseña válida"]);
-
+            return back()->withErrors(['mssg' => "Ingrese una contraseña válida"]);
+        if ($email) {
+            $usersEmail = $email->users()->where("users.id", "!=", $user->id)->get();
+            if ($usersEmail->isNotEmpty()) {
+                foreach($usersEmail AS $userEmail) {
+                    if(\Hash::check($request->password, $userEmail->password))
+                        return back()->withErrors(['mssg' => "Establezca otra contraseña"]);
+                }
+            }
+        }
         if (Session::get('user')) {
             $email = $user->emails()->first();
             if (empty($email))
                 return back()->withErrors(['mssg' => "Ocurrió un error. No tiene emails registrados"]);
             Session::forget('user');
+            Session::forget('email');
             $data = [
                 "remember_token" => null,
                 "password" => \Hash::make($request->password)
@@ -207,14 +223,19 @@ class FormController extends Controller
         if($responseKeys["success"]) {
             $email = \App\Email::where("email", $request->email)->first();
             if ($email) {
-                $userEmail = $email->user;
-                $statement = $userEmail->statements()->orderBy("id", "DESC")->first();
-                if ($statement) {
-                    $url = \URL::to('login');
-                    $txt = "<p>Última declaración: " . date("d/m/Y H:i:s", strtotime($statement->created_at)) . "</p>";
-                    $txt .= textPrint("USER.ACT");
-                    $txt = str_replace("__LINK__", "<a class='text-primary' href='{$url}'>LINK</a>", $txt);
-                    return ["error" => 0, "success" => false, "txt" => $txt];
+                $usersEmail = $email->users;
+                if ($usersEmail->isNotEmpty()) {
+                    $userEmail = $usersEmail->where("tipo", $request->tipo)->first();
+                    if ($userEmail) {
+                        $statement = $userEmail->statements()->orderBy("id", "DESC")->first();
+                        if ($statement) {
+                            $url = \URL::to('login');
+                            $txt = "<p>Última declaración: " . date("d/m/Y H:i:s", strtotime($statement->created_at)) . "</p>";
+                            $txt .= textPrint("USER.ACT");
+                            $txt = str_replace("__LINK__", "<a class='text-primary' href='{$url}'>LINK</a>", $txt);
+                            return ["error" => 0, "success" => false, "txt" => $txt];
+                        }
+                    }
                 }
             }
             $search = self::search(strtolower($request->email), $request->tipo);
@@ -244,7 +265,7 @@ class FormController extends Controller
                     $search = explode("\t", $search);
                     $search = array_map("self::clear", $search);
                     $link = null;
-                    $user = \App\User::where("comitente", $search[1])->first();
+                    $user = \App\User::where("comitente", $search[1])->where("tipo", $search[0])->first();
                     $data = [];
                     $data["nombre"] = $search[2];
                     $data["comitente"] = $search[1];
@@ -269,25 +290,25 @@ class FormController extends Controller
                         $user->save();
                         (new \App\Log)->create("users", $user->id, "Modificación del registro", NULL, "U");
                     }
-                    \App\Email::where('user_id', $user->id)->delete();
-                    $emails = explode("/", $search[12]);
+                    $emails = explode(";", $search[12]);
                     for ($i = 0; $i < count($emails); $i++) {
                         $e = \App\Email::where("email", $emails[$i])->first();
                         if (empty($e))
-                            \App\Email::create(["email" => $emails[$i], "user_id" => $user->id]);
+                            $e = \App\Email::create(["email" => $emails[$i]]);
+                        \App\EmailUser::create(["email_id" => $e->id, "user_id" => $user->id]);
                     }
                     $emails = $user->emails;
                     foreach($emails AS $email) {
                         $txt = textPrint("EMAIL.HASH");
-                        $link = \URL::to("/") . "?hash={$link}email={$email->email}";
-                        $link = "<a target='blank' href='{$link}'>{$link}</a>";
-                        $txt = str_replace("EMAIL.HASH", $link, $txt);
-                        Mail::to($email)->send( new ClientMail([
+                        $linkEmail = \URL::to("/") . "?hash={$link}email={$email->email}&tipo={$search[0]}";
+                        $linkEmail = "<a target='blank' href='{$linkEmail}'>{$linkEmail}</a>";
+                        $txt = str_replace("EMAIL.HASH", $linkEmail, $txt);
+                        Mail::to($email->email)->send( new ClientMail([
                             "logo" => asset(\App\Rig::first()->images["logo"]["i"]),
                             "txt" => $txt,
                             "subject" => "Acceso a R.I.G."
                         ]));
-                        (new \App\Log)->create("email", null, "Envio p/ acceso a {$email}", null, "N");
+                        (new \App\Log)->create("email", null, "Envio p/ acceso a {$email->email}", null, "N");
                     }
                 }// else
                     //return json_encode(["error" => 0, "success" => false, "mssg" => "Datos no encontrados"]);

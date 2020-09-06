@@ -14,6 +14,42 @@ class TextController extends Controller
      */
     public function index(Request $request)
     {
+        $help = "<table class='table'>";
+            $help .= "<thead>";
+                $help .= "<th class='w-25'>Código</th>";
+                $help .= "<th class='w-75'>Descripción</th>";
+            $help .= "</thead>";
+            $help .= "<tbody>";
+                $help .= "<tr>";
+                    $help .= "<td>EMAIL.STAT</td>";
+                    $help .= "<td>Texto enviado al cliente tras dar de alta una declaración.</td>";
+                $help .= "</tr>";
+                $help .= "<tr>";
+                    $help .= "<td>USER.ACT</td>";
+                    $help .= "<td>Texto de notificación de Usuario con declaración activa.</td>";
+                $help .= "</tr>";
+                $help .= "<tr>";
+                    $help .= "<td>EMAIL.HASH</td>";
+                    $help .= "<td>Primer texto enviado al cliente.</td>";
+                $help .= "</tr>";
+                $help .= "<tr>";
+                    $help .= "<td>TXT.1.LOG</td>";
+                    $help .= "<td>Texto que reemplaza el formulario de acceso.</td>";
+                $help .= "</tr>";
+                $help .= "<tr>";
+                    $help .= "<td>TXT.LOGIN</td>";
+                    $help .= "<td>Texto en formulario inicial.</td>";
+                $help .= "</tr>";
+                $help .= "<tr>";
+                    $help .= "<td>TXT.PASS</td>";
+                    $help .= "<td>Texto en formulario de establecimiento de contraseña.</td>";
+                $help .= "</tr>";
+                $help .= "<tr>";
+                    $help .= "<td>TXT.STA%</td>";
+                    $help .= "<td>Textos en la declaración.</td>";
+                $help .= "</tr>";
+            $help .= "</tbody>";
+        $help .= "</table>";
         if (isset($request->search))
             $texts = Text::where("code", "LIKE", "%{$request->search}%")->orderBy("code")->paginate(PAGINATE);
         else
@@ -25,7 +61,8 @@ class TextController extends Controller
             "elements" => $texts,
             "entity" => "text",
             "placeholder" => "Código",
-            "section" => "Textos"
+            "section" => "Textos",
+            "help" => $help
         ];
         if (isset($request->search))
             $data["search"] = $request->search;

@@ -45,7 +45,14 @@ class LoginController extends Controller
         unset($requestData["email"]);
         $email = \App\Email::where("email", $request->email)->first();
         if ($email) {// $this->guard()->validate($this->credentials($request))
-            $requestData["id"] = $email->user_id;
+            $users = $email->users;
+            if ($users->isEmpty())
+                return back()->withErrors(['mssg' => "Datos incorrectos o no encontrados"])->withInput();
+            foreach($users AS $user) {
+                if(\Hash::check($request->password, $user->password))
+                    break;
+            }
+            $requestData["id"] = $user->id;
             $requestData["remember_token"] = null;
             if (Auth::attempt($requestData)) {
                 (new \App\Log)->create("users", Auth::user()->id, "LOGIN OK", Auth::user()->id, "L");

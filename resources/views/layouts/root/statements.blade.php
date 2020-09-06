@@ -14,8 +14,14 @@
             <tbody>
                 @foreach($data["statements"] AS $statement)
                 <tr>
-                    <td>{{ date("d/m/Y H:i:s", strtotime($statement->deleted_at)) }}</td>
-                    <td>{{ $statement->user->fullname() . (!empty($statement->user->comitente) ? " (#{$statement->user->comitente})" : "") }}</td>
+                    <td>{{ date("d/m/Y H:i:s", strtotime($statement->created_at)) }}</td>
+                    <td>
+                        {{ $statement->user->nombre }}
+                        @if(!empty($statement->user->comitente))
+                        <br/><strong>Comitente:</strong> {{$statement->user->comitente}}
+                        @endif
+                        <br/><strong>Tipo:</strong> {{$statement->user->tipo}}
+                    </td>
                     <td>{{ $statement->operation->name }}</td>
                     <td>{{ $statement->data["_extras"]["email"] }}</td>
                     <td>{{ empty($statement->deleted_at) ? "Activo" : "Eliminado" }}</td>

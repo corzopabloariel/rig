@@ -24,7 +24,7 @@
                         <ul class="navbar-nav px-3">
                             <li class="nav-item dropdown">
                                 <a class="nav-link dropdown-toggle d-flex pr-5" href="#" id="navbarDropdownMenuUsuario" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                    {{Auth::user()->fullname()}}
+                                    {{Auth::user()->nombre}}
                                 </a>
                                 <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuUsuario">
                                     <a class="dropdown-item" href="{{ route('user.datos') }}"><i class="fas fa-database mr-2"></i>Mis Datos</a>

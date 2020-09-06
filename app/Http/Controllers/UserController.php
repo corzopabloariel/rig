@@ -17,10 +17,8 @@ class UserController extends Controller
         if (isset($request->search)) {
             $s = $request->search;
             $users = User::withTrashed()->where("id", "!=", \Auth::user()->id)->where("profile", "NOT LIKE", "user")
-                ->whereRaw("CONCAT_WS(' ', `name`, `lastname`) LIKE '%{$request->search}%'")
-                ->orWhereHas('emails', function ($query) use ($s) {
-                    $query->where('email', 'LIKE', "%{$s}%");
-                })->where("id", "!=", \Auth::user()->id)->where("profile", "NOT LIKE", "user")
+                ->whereRaw("CONCAT_WS(' ', `nombre`) LIKE '%{$request->search}%'")
+                ->where("id", "!=", \Auth::user()->id)->where("profile", "NOT LIKE", "user")
                 ->orderBy("profile")->orderBy("comitente")->paginate(PAGINATE);
         } else
             $users = User::withTrashed()->where("id", "!=", \Auth::user()->id)->where("profile", "NOT LIKE", "user")->orderBy("profile")->orderBy("comitente")->paginate(PAGINATE);
@@ -29,7 +27,7 @@ class UserController extends Controller
             "url_search" => \URL::to(\Auth::user()->redirect() . "/users"),
             "elements" => $users,
             "entity" => "user",
-            "placeholder" => "Nombre completo o Email",
+            "placeholder" => "Nombre completo",
             "section" => "Usuarios"
         ];
         if (isset($request->search))
@@ -46,10 +44,8 @@ class UserController extends Controller
         if (isset($request->search)) {
             $s = $request->search;
             $users = User::withTrashed()->where("profile", "LIKE", "user")
-                ->whereRaw("CONCAT_WS(' ', `name`, `lastname`, `comitente`) LIKE '%{$request->search}%'")
-                ->orWhereHas('emails', function ($query) use ($s) {
-                    $query->where('email', 'LIKE', "%{$s}%");
-                })->where("profile", "LIKE", "user")
+                ->whereRaw("CONCAT_WS(' ', `nombre`, `comitente`) LIKE '%{$request->search}%'")
+                ->where("profile", "LIKE", "user")
                 ->orderBy("profile")->orderBy("comitente")->paginate(PAGINATE);
         } else
             $users = User::withTrashed()->where("profile", "LIKE", "user")->orderBy("comitente")->paginate(PAGINATE);
@@ -59,7 +55,7 @@ class UserController extends Controller
             "elements" => $users,
             "entity" => "client",
             "notForm" => 1,
-            "placeholder" => "Nombre completo, comitente o Email",
+            "placeholder" => "Nombre completo o comitente",
             "section" => "Clientes"
         ];
         if (isset($request->search))
@@ -101,8 +97,10 @@ class UserController extends Controller
             (new \App\Log)->create("users", $user->id, "Nuevo registro", \Auth::user()->id, "C");
             if ($data) {
                 for ($i = 0; $i < count($emails); $i++) {
-                    $emails[$i]["user_id"] = $user->id;
-                    \App\Email::create($emails[$i]);
+                    $e = \App\Email::where("email", $emails[$i])->first();
+                    if (empty($e))
+                        $e = \App\Email::create(["email" => $emails[$i]]);
+                    \App\EmailUser::create(["email_id" => $e->id, "user_id" => $user->id]);
                 }
             }
         } catch (\Throwable $th) {
@@ -171,11 +169,13 @@ class UserController extends Controller
                 $data["data"]["password"] = $user->password;
             $user->fill($data["data"]);
             $user->save();
-            \App\Email::where('user_id', $user->id)->delete();
+            \App\EmailUser::where('user_id', $user->id)->delete();
             if ($data) {
                 for ($i = 0; $i < count($emails); $i++) {
-                    $emails[$i]["user_id"] = $user->id;
-                    \App\Email::create($emails[$i]);
+                    $e = \App\Email::where("email", $emails[$i])->first();
+                    if (empty($e))
+                        $e = \App\Email::create(["email" => $emails[$i]]);
+                    \App\EmailUser::create(["email_id" => $e->id, "user_id" => $user->id]);
                 }
             }
         } catch (\Throwable $th) {

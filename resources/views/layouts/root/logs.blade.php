@@ -26,7 +26,7 @@
                     <td>{{ date("d/m/Y H:i:s", strtotime($log->created_at)) }}</td>
                     <td>{{ $log->entity == "email" ? "Envio de Email" : $log->entity }}</td>
                     <td>{{ $log->entity_id }}</td>
-                    <td>{{ empty($log->user_id) ? "-" : $log->user->fullname() }}</td>
+                    <td>{{ empty($log->user_id) ? "-" : $log->user->nombre }}</td>
                     <td>{{ $type[$log->type] ?? "-" }}</td>
                 </tr>
                 @endforeach

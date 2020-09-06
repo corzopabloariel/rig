@@ -20,8 +20,8 @@ class EmailsTableSeeder extends Seeder
             0 => 
             array (
                 'id' => 1,
-                'user_id' => 1,
                 'email' => 'pc@grupotodo.com.ar',
+                'deleted_at' => NULL,
                 'created_at' => '2020-08-28 23:26:55',
                 'updated_at' => '2020-08-28 23:26:55',
             ),
