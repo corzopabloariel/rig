@@ -1,5 +1,6 @@
 <?php
 define("PAGINATE", param("paginate", 15));
+define("NOTICE", param("email:notice", "corzo.pabloariel@gmail.com"));
 
 define("MENU",
     [

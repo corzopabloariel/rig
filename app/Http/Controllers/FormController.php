@@ -119,13 +119,27 @@ class FormController extends Controller
                 }
                 if (!empty($elements["obs"]))
                     $add .= "<p><strong>Observaciones:</strong> {$elements["obs"]}</p>";
-                $pdf = PDF::loadView('pdf/statement', ["data" => $statement_text . "<br/><br/>{$add}"]);
-                Mail::to($email->email)->send(new ClientMail([
-                    "logo" => asset(\App\Rig::first()->images["logo"]["i"]),
-                    "txt" => $txt . $add,
-                    "subject" => "Declaración jurada R.I.G."
-                ], $pdf->output()));
-                // ADJUNTAR PDF
+                try {
+                    $pdf = PDF::loadView('pdf/statement', ["data" => $statement_text . "<br/><br/>{$add}"]);
+                    Mail::to($email->email)->send(new ClientMail([
+                        "logo" => asset(\App\Rig::first()->images["logo"]["i"]),
+                        "txt" => $txt . $add,
+                        "subject" => "Declaración jurada R.I.G."
+                    ], $pdf->output()));
+                    // ADJUNTAR PDF
+                } catch (\Throwable $th) {
+                    Mail::to($email->email)->send(new ClientMail([
+                        "logo" => asset(\App\Rig::first()->images["logo"]["i"]),
+                        "txt" => $txt . $add,
+                        "subject" => "Declaración jurada R.I.G."
+                    ]));
+                    Mail::to(NOTICE)->send(new NoticeMail([
+                        "logo" => asset(\App\Rig::first()->images["logo"]["i"]),
+                        "data" => [
+                            "err" => $th
+                        ]
+                    ]));
+                }
             } catch (Exception $e) {
                 \DB::rollback();
                 return ["error" => 1 , "mssg" => "Error"];

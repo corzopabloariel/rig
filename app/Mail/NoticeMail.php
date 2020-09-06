@@ -16,9 +16,9 @@ class NoticeMail extends Mailable
      *
      * @return void
      */
-    public function __construct()
+    public function __construct($data)
     {
-        //
+        $this->data = $data;
     }
 
     /**
@@ -28,6 +28,9 @@ class NoticeMail extends Mailable
      */
     public function build()
     {
-        return $this->view('view.name');
+        $mail = $this
+            ->subject('Notificación del sistema - RIG')->view('email.notice')
+            ->with($this->data);
+        return $mail;
     }
 }
